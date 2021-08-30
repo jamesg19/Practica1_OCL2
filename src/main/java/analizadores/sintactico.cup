@@ -1,0 +1,272 @@
+package analizadores; 
+import java_cup.runtime.*;
+import java.util.LinkedList;
+import arbol.*;
+import arbol.Simbolo.Tipo;
+import java.util.ArrayList;
+
+
+parser code 
+{:
+
+    public LinkedList<Instruccion> AST;
+    ArrayList<String> listVAR = new ArrayList<String>();
+
+    public void syntax_error(Symbol s){ 
+            System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
+    } 
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+            System.err.println("Error síntactico irrecuperable en la Línea " + (s.left)+ " Columna "+s.right+". Componente " + s.value + " no reconocido."); 
+    }  
+
+    public LinkedList<Instruccion> getAST() {
+        return AST;
+    }
+
+:};
+
+terminal String PTCOMA;
+terminal String INCREMENTO, DECREMENTO, SUMA_SIMPLIFICADA;
+terminal String PROGRAMA, CADENAA, CHARR;
+terminal INDENT_A, INDENT_C;
+terminal String UMENOS, NOTT,IMPRIMIR;
+terminal String NOMBRE, PISTA, EXTIENDE;
+terminal String ENTERO, ENTEROO, DECIMAL, DECIMALL, BOOLEAN, CHAR, CADENA, TRUE, FALSE;
+terminal String KEEP, VAR, SI, SINO, SWITCH, CASO, SALIR, CONTINUAR, DEFAULT, PARA, MIENTRAS, HACER, RETORNA, REPRODUCIR;
+//terminal String DO, RE, MI, FA, SOL, LA, SII, DOO, REE, MII, FAA, SOLL, LAA;
+terminal String  NOTAS_MUSICALES, ESPERAR, ORDENAR, TIPOS_ORDENAMIENTO, SUMARIZAR, LONGITUD, MENSAJE, PRINCIPAL, ARREGLO;
+terminal String COMA, CORCHETE_ABRE, CORCHETE_CIERRA, PARENTESIS_ABRE, PARENTESIS_CIERRA, LLAVE_ABRE, LLAVE_CIERRA;
+terminal IGUAL, IGUALACION, DIFERENCIACION, MAYORQUE, MENORQUE, MAYORIGUAL, MENORIGUAL, ESNULO, AND, NAND, OR, NOR, XOR, NOT;
+terminal String SUMA, RESTA, MULTIPLICACION, DIVISION, MODULO, POTENCIA;
+
+
+
+
+
+non terminal ini;
+non terminal LinkedList<Instruccion> instrucciones;
+non terminal LinkedList<Instruccion> sino_si, lista_casos;
+non terminal LinkedList<String> vars_id;
+non terminal Instruccion instruccion;
+non terminal Instruccion imprimir, incremental;
+non terminal Instruccion declaracion_variables, declaracion_variables2, asignacion_variables, arreglos; 
+non terminal Instruccion asignacion_arreglo, si, switch, para1, para2, mientras, continuar;
+non terminal Instruccion salir, retorna, hacer_mientras, reproducir, esperar, ordenar; 
+non terminal Operacion expresion;
+non terminal pistas, parametros , lista_Dimension, lista_expresiones2, keep;
+non terminal Simbolo.Tipo tipo_variable;
+non terminal valores, sub_expresion;
+non terminal  sumarizar;
+
+
+/// PRECEDENCIA
+precedence left OR, XOR;
+precedence left AND, NAND;
+
+precedence right IGUALACION, DIFERENCIACION, MENORQUE, MENORIGUAL, MAYORIGUAL, MAYORQUE; 
+precedence left SUMA,RESTA;
+precedence left MULTIPLICACION,DIVISION, MODULO;
+precedence left POTENCIA;
+precedence right UMENOS, NOTT; 
+precedence nonassoc INCREMENTO,DECREMENTO; 
+
+start with ini; 
+
+
+ini::= pistas INDENT_A instrucciones:a INDENT_C {:
+    parser.AST=a;
+:};
+
+
+instrucciones ::= 
+    instrucciones:a instruccion: b{:RESULT=a; RESULT.add(b); :}
+    | instruccion:a {: RESULT=new LinkedList<>(); RESULT.add(a); :}
+; 
+pistas ::=
+    PISTA NOMBRE
+    | PISTA NOMBRE EXTIENDE parametros
+
+;
+parametros ::=
+    parametros COMA NOMBRE
+    | NOMBRE
+;
+
+instruccion ::=
+    imprimir:a                                  {: RESULT=a; :}
+    | declaracion_variables:a                   {: RESULT=a; :}  
+    | declaracion_variables2:a                   {: RESULT=a; :}                
+    | asignacion_variables:a                    {: RESULT=a; :}                  
+    | arreglos:a                                
+    | asignacion_arreglo:a
+    | si:a                                      {: RESULT=a; :}
+    | switch:a                                  {: RESULT=a; :}   
+    | para1:a                                   {: RESULT=a; :}
+    | para2:a                                   {: RESULT=a; :}
+    | mientras:a                                {: RESULT=a; :}
+    | continuar:a
+    | retorna:a
+    | hacer_mientras:a
+    | reproducir:a
+    | esperar:a
+    | ordenar:a
+    | salir:a                                               {: RESULT = a; :}
+    | incremental:a                                           {: RESULT = a; :}
+    | NOMBRE:a SUMA_SIMPLIFICADA expresion:b                 {:RESULT=new SumaSimplificada(a,b);:}
+    | error {: System.err.println("error :( ..."); :}
+;
+imprimir::=
+    IMPRIMIR PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA          {:RESULT=new Imprimir(a);:}
+;
+declaracion_variables::=
+    keep VAR tipo_variable:b vars_id:a                                {:RESULT=new Declaracion(a,b);:}
+    
+;
+declaracion_variables2::=
+    keep VAR tipo_variable:b vars_id:a IGUAL expresion:c           {:RESULT=new Declaracion(a,b,c);:}
+;
+asignacion_variables::= 
+     vars_id:a IGUAL expresion:b                                    {:RESULT=new Asignacion(a,b);:} 
+;
+vars_id::=
+    vars_id:l COMA NOMBRE:a                                             {:RESULT= l; RESULT.add(a);:}                        
+    | NOMBRE:a                                                          {:RESULT= new LinkedList<>(); RESULT.add(a);:}
+;
+arreglos::=
+    keep VAR tipo_variable ARREGLO NOMBRE lista_Dimension 
+    | keep VAR tipo_variable ARREGLO NOMBRE
+    | keep VAR tipo_variable ARREGLO NOMBRE lista_Dimension IGUAL lista_expresiones2
+
+;
+asignacion_arreglo::=
+    NOMBRE:a lista_Dimension:c IGUAL expresion:b
+;
+lista_Dimension::=
+    lista_Dimension:lst CORCHETE_ABRE expresion CORCHETE_CIERRA   {: RESULT=Integer.parseInt(lst.toString())+1;  ;  :}
+    | CORCHETE_ABRE expresion CORCHETE_CIERRA                     {: RESULT=1; :}
+
+;
+lista_expresiones2::=
+    lista_expresiones2 COMA LLAVE_ABRE valores LLAVE_CIERRA 
+    | LLAVE_ABRE valores LLAVE_CIERRA
+;
+
+valores::= 
+    lista_expresiones2
+    | sub_expresion
+
+;
+sub_expresion::=
+    sub_expresion COMA expresion
+    | expresion
+
+;
+tipo_variable::=
+    CADENA                  {: RESULT=Tipo.CADENA; :}
+    | ENTERO                {: RESULT=Tipo.NUMERO; :}             
+    | DECIMAL               {: RESULT=Tipo.DECIMAL; :}
+    | CHAR                  {: RESULT=Tipo.CARACTER;:}
+    | BOOLEAN               {: RESULT=Tipo.BOOLEAN;:}
+;
+incremental::=
+     NOMBRE:a INCREMENTO                                   {:RESULT=new Incremento(a);:}
+    | NOMBRE:a DECREMENTO                                   {:RESULT=new Decremento(a);:}
+;
+si ::=
+    SI PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C                                                      {:RESULT=new If(a,b);:}
+    | SI PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C SINO INDENT_A instrucciones:c INDENT_C             {:RESULT=new If(a,b,c);:}
+    | SI PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C sino_si:c                                          {:RESULT=new If(a,b,c,null);:} 
+    | SI PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C sino_si:l SINO INDENT_A instrucciones:c INDENT_C   {:RESULT=new If(a,b,l,c);:}
+;
+
+sino_si ::=
+    sino_si:l SINO SI PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C           {:RESULT= l; RESULT.add(new If(a,b));:}
+    | SINO SI PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C                   {:RESULT= new LinkedList<>(); RESULT.add(new If(a,b));:}
+;
+switch::=
+    SWITCH PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA 
+    INDENT_A lista_casos:b  
+    DEFAULT INDENT_A instrucciones:c INDENT_C  INDENT_C                             {:RESULT=new Switch(a, null, b,c);:}
+
+;
+lista_casos::=
+    lista_casos:l CASO expresion:a INDENT_A instrucciones:b  INDENT_C              {:RESULT= l; RESULT.add(new Case(a,b));:}
+    | CASO expresion:a INDENT_A instrucciones:b INDENT_C                        {:RESULT= new LinkedList<>(); RESULT.add(new Case(a,b));:}
+;
+
+//FOR (PARA) con declaracion de variables
+para1::=
+    PARA PARENTESIS_ABRE  declaracion_variables2:a PTCOMA expresion:b PTCOMA incremental:c PARENTESIS_CIERRA INDENT_A instrucciones:d INDENT_C
+    {: RESULT=new Para1(a,b,c,d); :}
+;
+para2::=
+    PARA PARENTESIS_ABRE asignacion_variables:a PTCOMA expresion:b PTCOMA incremental:c PARENTESIS_CIERRA INDENT_A instrucciones:d INDENT_C
+    {: RESULT=new Para1(a,b,c,d); :}
+;
+
+hacer_mientras::=
+    HACER PARENTESIS_ABRE expresion PARENTESIS_CIERRA INDENT_A instrucciones INDENT_C
+    MIENTRAS PARENTESIS_ABRE expresion PARENTESIS_CIERRA
+;
+
+mientras::=
+    MIENTRAS PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C        {:RESULT=new Mientras(a,b);:}
+;
+continuar::=
+    CONTINUAR
+
+;
+salir::=
+    SALIR:a          {: RESULT= new Salir(); :}
+;
+retorna::=
+     RETORNA expresion
+;
+
+keep::=
+    KEEP
+    | 
+;
+//PARAMETROS Reproducir (Nota, Octava, milisegundos, canal)
+reproducir::=
+    REPRODUCIR PARENTESIS_ABRE NOTAS_MUSICALES:nota COMA expresion:octava COMA expresion:tiempo COMA expresion:canal PARENTESIS_CIERRA
+;
+esperar::=
+    ESPERAR PARENTESIS_ABRE expresion COMA expresion PARENTESIS_CIERRA
+;
+ordenar::=
+    ORDENAR PARENTESIS_ABRE NOMBRE COMA TIPOS_ORDENAMIENTO PARENTESIS_CIERRA
+;
+sumarizar::=
+    SUMARIZAR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA
+    | SUMARIZAR PARENTESIS_ABRE lista_expresiones2 PARENTESIS_CIERRA
+;
+expresion::=
+    expresion:a SUMA expresion:b                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.SUMA);:}
+    | expresion:a RESTA expresion:b                 {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.RESTA);:} 
+    | expresion:a MULTIPLICACION expresion:b        {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MULTIPLICACION);:}
+    | expresion:a DIVISION expresion:b              {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.DIVISION);:}
+    | expresion:a POTENCIA expresion:b              {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.POTENCIA);:}
+    | expresion:a MODULO expresion:b                {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MODULO);:}            
+    | expresion:a IGUALACION expresion:b            {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.IGUALACION);:}      
+    | expresion:a DIFERENCIACION expresion:b        {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.DIFERENCIACION);:}  
+    | expresion:a MAYORQUE expresion:b              {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MAYOR_QUE);:}
+    | expresion:a MENORQUE expresion:b              {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MENOR_QUE);:}
+    | expresion:a MAYORIGUAL expresion:b            {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MAYOR_IGUAL);:}
+    | expresion:a MENORIGUAL expresion:b            {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MENOR_QUE);:}
+    | expresion:a OR expresion:b                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.OR);:}
+    | expresion:a XOR expresion:b                   {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.XOR);:}
+    | expresion:a AND expresion:b                   {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.AND);:}
+    | expresion:a NAND expresion:b                  {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.NAND);:} 
+    | RESTA expresion:a                             {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGATIVO);:}%prec UMENOS
+    | NOT expresion:a                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGACION);:}%prec NOTT                    
+    | PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA {:RESULT=a;:}
+    | ENTEROO:a                                     {:RESULT=new Operacion(new Integer(a)," "," ","");:}
+    | DECIMALL:a                                    {:RESULT=new Operacion(new Double(a));:}
+    | TRUE:a 
+    | FALSE:a
+    | NOMBRE:a                                      {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
+    | CADENAA:a                                     {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CADENA);:}
+    | CHARR:a                                       {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CARACTER);:} 
+;
