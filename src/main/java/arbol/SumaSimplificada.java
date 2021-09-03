@@ -36,7 +36,7 @@ public class SumaSimplificada implements Instruccion {
      * @return el valor anterior al incremento.
      */
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         try{
         Object tmp = ts.getValor(id.toString());
         //System.out.println("SUMA SIMPLIFICADA: ID: " + id + " valor actual: " + (Double) tmp + " sumar " + operacion.ejecutar(ts));
@@ -44,16 +44,16 @@ public class SumaSimplificada implements Instruccion {
         String tipo = ts.getTipo(id).toString();
 
         if (tipo.equals("CADENA")) {
-            ts.setValor(id, (tmp.toString() + operacion.ejecutar(ts).toString()));
+            ts.setValor(id, (tmp.toString() + operacion.ejecutar(AST,ts).toString()));
 
         } else if (tipo.equals("CARACTER")) {
-            ts.setValor(id, ((Integer) tmp + operacion.ejecutar(ts).toString()));
+            ts.setValor(id, ((Integer) tmp + operacion.ejecutar(AST,ts).toString()));
 
         } else if (tipo.equals("NUMERO")) {
-            ts.setValor(id, ((Integer) tmp + (Integer) operacion.ejecutar(ts)));
+            ts.setValor(id, ((Integer) tmp + (Integer) operacion.ejecutar(AST,ts)));
 
         } else if (tipo.equals("DECIMAL")) {
-            ts.setValor(id, ((Double) tmp + (Double) operacion.ejecutar(ts)));
+            ts.setValor(id, ((Double) tmp + (Double) operacion.ejecutar(AST,ts)));
         } else {
 
         }

@@ -58,15 +58,28 @@ public class If implements Instruccion{
      * su ejecución
      */
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         // si la condicion del if es VERDADERA
-        if((Boolean)condicion.ejecutar(ts)){
+        //try{
+        boolean FLAG=Boolean.parseBoolean(condicion.ejecutar(AST,ts).toString());
+        
+        
+        if(FLAG){
             //crea un ambito para instrucciones dentro del IF
             TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
             tablaLocal.addAll(ts);
             //ejecuta las instrucciones dentro del IF
             for(Instruccion in: listaInstrucciones){
-                in.ejecutar(tablaLocal);
+                //System.out.println(in.ejecutar(tablaLocal).getClass().getSimpleName());
+                if(in instanceof Continue){
+                    
+                    return new Continue();
+                }
+                
+                    in.ejecutar(AST,tablaLocal);
+                
+                
+                
             }
             return true;
           
@@ -78,7 +91,11 @@ public class If implements Instruccion{
             if(listaElseIfInstrucciones != null){
                 //lee la lista de instrucciones
                 for(Instruccion in: listaElseIfInstrucciones){
-                    if((boolean)in.ejecutar(ts)){
+                    if(in instanceof Continue){
+                    
+                    return new Continue();
+                }
+                    if((boolean)in.ejecutar(AST,ts)){
                         bandera = true;
                         break;
                     }
@@ -89,10 +106,15 @@ public class If implements Instruccion{
                 TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
                 tablaLocal.addAll(ts);
                 for(Instruccion in: listaInsElse){
-                    in.ejecutar(tablaLocal);
+                    if(in instanceof Continue){
+                    
+                    return new Continue();
+                }
+                    in.ejecutar(AST,tablaLocal);
                 }            
             }
         }
+
         return false;
     }
 }

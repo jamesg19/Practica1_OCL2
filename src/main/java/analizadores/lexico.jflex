@@ -13,7 +13,7 @@ import java_cup.runtime.Symbol;
 %char 
 %cup 
 %unicode
-%state COMMENT_MULTILINEA, COMMENT_LINE, SALTO_LINEA
+%state COMMENT_MULTILINEA, COMMENT_MULTILINEA2, COMMENT_LINE, SALTO_LINEA, COMMENT_LINE2
 
 PROGRAMA= [Pp][Rr][Oo][Gg][Rr][Aa][Mm][Aa]
 NOMBRE=[A-Za-z0-9]+
@@ -101,10 +101,7 @@ CHARRR=(\'([(-Za-zÀ-ÖØ-öø-ÿ#-&]|([#][n]|[#][t]|[#][r]|[#][\']|[#][\"]|[#][
 
 %%
 
-
 <YYINITIAL>{
-
-
     
     ("Pista"|"PISTA"|"pista")                                   { return new Symbol(sym.PISTA,yyline+1,yycolumn, yytext()); }
     ("Extiende"|"EXTIENDE"|"extiende")                          { return new Symbol(sym.EXTIENDE,yyline+1,yycolumn, yytext()); }
@@ -176,7 +173,7 @@ CHARRR=(\'([(-Za-zÀ-ÖØ-öø-ÿ#-&]|([#][n]|[#][t]|[#][r]|[#][\']|[#][\"]|[#][
     ("=")                          {return new Symbol(sym.IGUAL,yyline+1,yycolumn, yytext());}
     ("++")                          {return new Symbol(sym.INCREMENTO,yyline+1,yycolumn, yytext());}
     ("--")                          {return new Symbol(sym.DECREMENTO,yyline+1,yycolumn, yytext());}
-    ("+=")                          {return new Symbol(sym.SUMA_SIMPLIFICADA,yyline+1,yycolumn, yytext());}
+    ("+=")                          {return new Symbol(sym.SUMA_SIMPLIFICADA,yyline+1,yycolumn, yytext()); }
 
 
 
@@ -216,18 +213,27 @@ CHARRR=(\'([(-Za-zÀ-ÖØ-öø-ÿ#-&]|([#][n]|[#][t]|[#][r]|[#][\']|[#][\"]|[#][
 
 <COMMENT_LINE>{
     {SALTOLINEA}                    { yybegin(YYINITIAL); }
-    [^\n]                               {}
+    [^\n]                               { }
 }
 
 <SALTO_LINEA>{
     
     {TABULACION}                { Symbol retorno = indent(yytext(),true,false); if (retorno!=null) {return retorno; }; }
-    {TABULACION}">>"            { yybegin(COMMENT_LINE); }
+    {TABULACION}(">>")            { yybegin(COMMENT_LINE2); }
     {TABULACION}"<-"            { yybegin(COMMENT_MULTILINEA); }
     [^"\t"">>""<-"]             { Symbol retorno = indent(yytext(),false,false); if (retorno!=null) {return retorno; }; }
+
+}
+<COMMENT_LINE2>{
+    {SALTOLINEA}                    { yybegin(SALTO_LINEA); }
+    [^\n]                               { }
+
 }
 
-
+<COMMENT_MULTILINEA2>{
+    "->"        { yybegin(SALTO_LINEA); }
+    [^""]     { }
+}
 
 [^]
 {

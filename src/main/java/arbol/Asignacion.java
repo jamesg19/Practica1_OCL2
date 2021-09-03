@@ -39,10 +39,10 @@ public class Asignacion implements Instruccion{
      * @return En este caso retorna nulo porque no es una sentencia que genere un valor.
      */
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         for(String in : id){
-            System.out.println("ASIGNACION DE VARIABLE ID: "+in.toString()+" valor: "+valor.ejecutar(ts));
-            ts.setValor(in.toString(),valor.ejecutar(ts));
+            System.out.println("ASIGNACION DE VARIABLE ID: "+in.toString()+" valor: "+valor.ejecutar(AST,ts));
+            ts.setValor(in.toString(),valor.ejecutar(AST,ts));
         }
         
         return null;

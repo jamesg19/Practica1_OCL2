@@ -1,5 +1,6 @@
 package arbol;
 
+import Error.Exeption;
 import java.util.LinkedList;
 
 /**
@@ -7,9 +8,9 @@ import java.util.LinkedList;
  * la interfaz de instrucción
  * @author James
  */
-public class Mientras implements Instruccion{
+public class Hacer_Mientras implements Instruccion{
     /**
-     * Condición de la sentencia mientras.
+     * Condición de la sentencia hacer mientras.
      */
     private final Operacion condicion;
     private final LinkedList<Instruccion> listaInstrucciones;
@@ -20,7 +21,7 @@ public class Mientras implements Instruccion{
      * @param a condición que debe evaluarse para ejecutar el ciclo
      * @param b instrucciones que deben ejecutarse si la condición se cumpliera
      */
-    public Mientras(Operacion a, LinkedList<Instruccion> b, String linea, String columna) {
+    public Hacer_Mientras(Operacion a, LinkedList<Instruccion> b, String linea, String columna) {
         this.condicion=a;
         this.listaInstrucciones=b;
         this.linea=linea;
@@ -29,13 +30,21 @@ public class Mientras implements Instruccion{
 
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
-        
-        while((Boolean)condicion.ejecutar(AST,ts)){
+        try{
+        do{
             TablaDeSimbolos tablaLocal=new TablaDeSimbolos();
             tablaLocal.addAll(ts);
             for(Instruccion ins:listaInstrucciones){
                 ins.ejecutar(AST,tablaLocal);
+                if(ins instanceof Exeption){
+                    Exeption ext=(Exeption) ins;
+                    
+                    return ext;
+                }
             }
+        }while((Boolean)condicion.ejecutar(AST,ts));
+        } catch(Exception e){
+            return new Exeption("SEMANTICO"," ERROR EN HCAER MIENTRAS",linea,columna);
         }
         return null;
     }   

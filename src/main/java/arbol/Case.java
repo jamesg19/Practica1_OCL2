@@ -27,12 +27,13 @@ public class Case implements Instruccion {
     }
 
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
 
         TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
         tablaLocal.addAll(ts);
         for (Instruccion in : listaInstrucciones) {
-            in.ejecutar(tablaLocal);
+            in.ejecutar(AST,tablaLocal);
+            
             if (in instanceof Salir) {
                 return false;
             }

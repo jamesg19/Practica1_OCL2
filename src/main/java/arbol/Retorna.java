@@ -1,22 +1,24 @@
 package arbol;
 
 
-public class Salir implements Instruccion{
+public class Retorna implements Instruccion{
     private String linea;
     private String columna;
+    private final Operacion a;
 
-    public Salir(String linea, String columna) {
+    public Retorna(Operacion a, String linea, String columna) {
+        this.a=a;
         this.linea=linea;
         this.columna=columna;
     }
     /**
-     * METODO SALIR
-     * @return En este caso retorna nulo porque no es una sentencia que genere un valor.
+     * METODO RETORNA
+     * @return En este caso retorna un valor;
      */
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
-       
-        return null;
+        
+        return a.ejecutar(AST,ts);
     }
 
     public String getLinea() {

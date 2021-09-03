@@ -48,7 +48,7 @@ public class Switch implements Instruccion {
      * su ejecución
      */
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         System.out.println("ENTRA AL SWITCH");
         boolean bandera = false;
         //verifica que venga mas de un Case en el Switch
@@ -61,12 +61,12 @@ public class Switch implements Instruccion {
                     //castea el objeto a case
                     Case caso = (Case) in;
                     //verifica que la condicion se cumpla
-                    String aa=caso.getCondicion().ejecutar(ts)+"";
-                    String bb=variableSwitch.ejecutar(ts)+"";
+                    String aa=caso.getCondicion().ejecutar(AST,ts)+"";
+                    String bb=variableSwitch.ejecutar(AST,ts)+"";
 
                     if (aa.equals(bb)) {
                         //ejecuta las instrucciones 
-                        if ((boolean) in.ejecutar(ts)) {
+                        if ((boolean) in.ejecutar(AST,ts)) {
                             //verifica si viene la instruccion Salir
                             bandera = false;
 //                            break;
@@ -86,7 +86,7 @@ public class Switch implements Instruccion {
             TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
             tablaLocal.addAll(ts);
             for (Instruccion in : listaInsDefault) {
-                in.ejecutar(tablaLocal);
+                in.ejecutar(AST,tablaLocal);
             }
         }
 

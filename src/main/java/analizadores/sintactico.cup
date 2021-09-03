@@ -46,22 +46,23 @@ terminal String SUMA, RESTA, MULTIPLICACION, DIVISION, MODULO, POTENCIA;
 
 non terminal ini;
 non terminal LinkedList<Instruccion> instrucciones;
-non terminal LinkedList<Instruccion> sino_si, lista_casos;
+non terminal LinkedList<Instruccion> sino_si, lista_casos, parametros_funcion;
 non terminal LinkedList<String> vars_id;
 non terminal Instruccion instruccion;
-non terminal Instruccion imprimir, incremental;
+non terminal Instruccion imprimir, mensaje, incremental;
 non terminal Instruccion declaracion_variables, declaracion_variables2, asignacion_variables, arreglos; 
 non terminal Instruccion asignacion_arreglo, si, switch, para1, para2, mientras, continuar;
 non terminal Instruccion salir, retorna, hacer_mientras, reproducir, esperar, ordenar; 
+non terminal Instruccion principal, funcion;
 non terminal Operacion expresion;
 non terminal pistas, parametros , lista_Dimension, lista_expresiones2, keep;
 non terminal Simbolo.Tipo tipo_variable;
 non terminal valores, sub_expresion;
-non terminal  sumarizar;
+non terminal Instruccion metodos_retorno, sumarizar;
 
 
 /// PRECEDENCIA
-precedence left OR, XOR;
+precedence left OR, XOR, NOR;
 precedence left AND, NAND;
 
 precedence right IGUALACION, DIFERENCIACION, MENORQUE, MENORIGUAL, MAYORIGUAL, MAYORQUE; 
@@ -95,36 +96,44 @@ parametros ::=
 
 instruccion ::=
     imprimir:a                                  {: RESULT=a; :}
+    | principal:a                               {: RESULT=a; :}
     | declaracion_variables:a                   {: RESULT=a; :}  
     | declaracion_variables2:a                   {: RESULT=a; :}                
     | asignacion_variables:a                    {: RESULT=a; :}                  
     | arreglos:a                                
     | asignacion_arreglo:a
+    | mensaje:a                                 {: RESULT=a; :}
     | si:a                                      {: RESULT=a; :}
     | switch:a                                  {: RESULT=a; :}   
     | para1:a                                   {: RESULT=a; :}
     | para2:a                                   {: RESULT=a; :}
     | mientras:a                                {: RESULT=a; :}
-    | continuar:a
-    | retorna:a
-    | hacer_mientras:a
-    | reproducir:a
-    | esperar:a
+    | continuar:a                               {: RESULT=a; :}
+    | retorna:a                                 {: RESULT=a; :}
+    | hacer_mientras:a                          {: RESULT=a; :}                 
+    | reproducir:a                              {: RESULT=a; :}
+    | esperar:a                                 {: RESULT=a; :}
     | ordenar:a
     | salir:a                                               {: RESULT = a; :}
     | incremental:a                                           {: RESULT = a; :}
     | NOMBRE:a SUMA_SIMPLIFICADA expresion:b                 {:RESULT=new SumaSimplificada(a,b);:}
     | error {: System.err.println("error :( ..."); :}
 ;
+principal::=
+    PRINCIPAL PARENTESIS_ABRE PARENTESIS_CIERRA INDENT_A instrucciones:ins INDENT_C
+    {: RESULT=new Principal(ins); :}
+;
+
 imprimir::=
     IMPRIMIR PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA          {:RESULT=new Imprimir(a);:}
 ;
 declaracion_variables::=
-    keep VAR tipo_variable:b vars_id:a                                {:RESULT=new Declaracion(a,b);:}
+      keep VAR tipo_variable:b vars_id:a                                {:RESULT=new Declaracion(a,b);:}
     
 ;
 declaracion_variables2::=
     keep VAR tipo_variable:b vars_id:a IGUAL expresion:c           {:RESULT=new Declaracion(a,b,c);:}
+    //| keep VAR tipo_variable:b vars_id:a IGUAL metodos_retorno:c           {:RESULT=new Declaracion(a,b,c);:}
 ;
 asignacion_variables::= 
      vars_id:a IGUAL expresion:b                                    {:RESULT=new Asignacion(a,b);:} 
@@ -206,22 +215,23 @@ para2::=
 ;
 
 hacer_mientras::=
-    HACER PARENTESIS_ABRE expresion PARENTESIS_CIERRA INDENT_A instrucciones INDENT_C
-    MIENTRAS PARENTESIS_ABRE expresion PARENTESIS_CIERRA
+    HACER  INDENT_A instrucciones:ins INDENT_C
+    MIENTRAS PARENTESIS_ABRE expresion:condicion PARENTESIS_CIERRA
+    {: RESULT = new Hacer_Mientras(condicion,ins,insleft+"",insright+""); :}
 ;
 
 mientras::=
-    MIENTRAS PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C        {:RESULT=new Mientras(a,b);:}
+    MIENTRAS:ss PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA INDENT_A instrucciones:b INDENT_C        {:RESULT=new Mientras(a,b,ssleft+"",ssright+"");:}
 ;
 continuar::=
-    CONTINUAR
+        CONTINUAR:a               {: RESULT= new Continue(aleft+"",aright+""); :}
 
 ;
 salir::=
-    SALIR:a          {: RESULT= new Salir(); :}
+    SALIR:a          {: RESULT= new Salir(aleft+"",aright+""); :}
 ;
 retorna::=
-     RETORNA expresion
+     RETORNA:r expresion:a                {: RESULT= new Retorna(a,rleft+"",rright+""); :}
 ;
 
 keep::=
@@ -230,17 +240,40 @@ keep::=
 ;
 //PARAMETROS Reproducir (Nota, Octava, milisegundos, canal)
 reproducir::=
-    REPRODUCIR PARENTESIS_ABRE NOTAS_MUSICALES:nota COMA expresion:octava COMA expresion:tiempo COMA expresion:canal PARENTESIS_CIERRA
+    REPRODUCIR:a PARENTESIS_ABRE NOTAS_MUSICALES:nota COMA expresion:octava COMA expresion:tiempo COMA expresion:canal PARENTESIS_CIERRA
+    {: RESULT= new Reproducir(nota,octava,tiempo, canal,aleft+"",aright+""); :}
 ;
+
 esperar::=
-    ESPERAR PARENTESIS_ABRE expresion COMA expresion PARENTESIS_CIERRA
+    ESPERAR:a PARENTESIS_ABRE expresion:tiempo COMA expresion:canal PARENTESIS_CIERRA
+    {: RESULT = new Esperar(tiempo, canal,aleft+"",aright+""); :}
 ;
+
+metodos_retorno::=
+    sumarizar:a                             {: RESULT=a;:}
+;
+
+
 ordenar::=
     ORDENAR PARENTESIS_ABRE NOMBRE COMA TIPOS_ORDENAMIENTO PARENTESIS_CIERRA
 ;
 sumarizar::=
     SUMARIZAR PARENTESIS_ABRE NOMBRE PARENTESIS_CIERRA
     | SUMARIZAR PARENTESIS_ABRE lista_expresiones2 PARENTESIS_CIERRA
+;
+mensaje::=
+    MENSAJE PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA
+    {: RESULT= new Mensaje(a); :}
+;
+funcion::=
+    keep:k tipo_variable:tipo NOMBRE:id PARENTESIS_ABRE parametros_funcion:param PARENTESIS_CIERRA INDENT_A instrucciones:ins INDENT_C
+    {: RESULT= new Funcion(tipo,id,param,ins); :}
+
+;
+parametros_funcion::=
+    parametros_funcion:l COMA tipo_variable:tipo NOMBRE:id                      {:RESULT= l; RESULT.add(new Parametros(tipo,id));:}
+    | tipo_variable:tipo NOMBRE:id                                              {:RESULT= new LinkedList<>(); RESULT.add(new Parametros(tipo,id));:}
+
 ;
 expresion::=
     expresion:a SUMA expresion:b                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.SUMA);:}
@@ -256,17 +289,19 @@ expresion::=
     | expresion:a MAYORIGUAL expresion:b            {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MAYOR_IGUAL);:}
     | expresion:a MENORIGUAL expresion:b            {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.MENOR_QUE);:}
     | expresion:a OR expresion:b                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.OR);:}
+    | expresion:a NOR expresion:b                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.NOR);:}
     | expresion:a XOR expresion:b                   {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.XOR);:}
     | expresion:a AND expresion:b                   {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.AND);:}
     | expresion:a NAND expresion:b                  {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.NAND);:} 
     | RESTA expresion:a                             {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGATIVO);:}%prec UMENOS
     | NOT expresion:a                               {:RESULT=new Operacion(a,Operacion.Tipo_operacion.NEGACION);:}%prec NOTT                    
     | PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA {:RESULT=a;:}
-    | ENTEROO:a                                     {:RESULT=new Operacion(new Integer(a)," "," ","");:}
+    | ENTEROO:a                                     {:RESULT=new Operacion(new Integer(a));:}
     | DECIMALL:a                                    {:RESULT=new Operacion(new Double(a));:}
-    | TRUE:a 
-    | FALSE:a
+    | TRUE:a                                        {:RESULT=new Operacion(new Boolean(a));:}
+    | FALSE:a                                       {:RESULT=new Operacion(new Boolean(a));:}
     | NOMBRE:a                                      {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
     | CADENAA:a                                     {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CADENA);:}
     | CHARR:a                                       {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CARACTER);:} 
+    
 ;

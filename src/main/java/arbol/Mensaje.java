@@ -1,22 +1,25 @@
 
 package arbol;
 
+import javax.swing.JOptionPane;
+
 /**
  * Clase que ejecuta las acciones de una instrucción imprimir y que implementa
  * la interfaz de instrucción
- * @author Erick
+ * @author James
  */
-public class Imprimir implements Instruccion{
+public class Mensaje implements Instruccion{
     /**
      * Contenido que será impreso al ejecutar la instrucción imprimir, este debe
      * ser una instrucción que genere un valor al ser ejecutada.
      */
     private final Instruccion contenido;
+    private String mensaje;
     /**
      * Constructor de la clase imprimir
      * @param contenido contenido que será impreso al ejecutar la instrucción
      */
-    public Imprimir(Instruccion contenido) {
+    public Mensaje(Instruccion contenido) {
         this.contenido = contenido;
     }
     /**
@@ -29,8 +32,18 @@ public class Imprimir implements Instruccion{
      */
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
-        System.out.println(contenido.ejecutar(AST,ts).toString());
+        mensaje=contenido.ejecutar(AST,ts).toString();
+        JOptionPane.showMessageDialog(null,mensaje);
+        //System.out.println(contenido.ejecutar(ts).toString());
         return null;
+    }
+
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
     
 }

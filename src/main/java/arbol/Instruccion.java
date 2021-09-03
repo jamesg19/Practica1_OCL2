@@ -13,5 +13,5 @@ public interface Instruccion {
      * operación relacional, entonces se devuelve el valor que la operación da como 
      * resultado.
      */
-    public Object ejecutar(TablaDeSimbolos ts);
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts);
 }

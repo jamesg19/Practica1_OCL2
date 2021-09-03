@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 public class TablaDeSimbolos extends LinkedList<Simbolo>{
 
+    LinkedList<Instruccion> FUNCIONES;
     
     public TablaDeSimbolos() {
         super();
@@ -61,4 +62,13 @@ public class TablaDeSimbolos extends LinkedList<Simbolo>{
         
         
     }
+
+    public LinkedList<Instruccion> getFUNCIONES() {
+        return FUNCIONES;
+    }
+
+    public void setFUNCIONES(LinkedList<Instruccion> FUNCIONES) {
+        this.FUNCIONES = FUNCIONES;
+    }
+    
 }

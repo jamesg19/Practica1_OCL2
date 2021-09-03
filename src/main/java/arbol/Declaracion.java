@@ -55,7 +55,7 @@ public class Declaracion implements Instruccion {
      * @return No retorna nada porque no es una sentencia que genere un valor.
      */
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         // verifica si no viene algun valor para asignar a las variables
         if (valor == null) {
             for (String in : id) {
@@ -69,9 +69,9 @@ public class Declaracion implements Instruccion {
                 ts.add(new Simbolo(in.toString(), tipo));
                 String tipovar=ts.getTipo(in).toString();
                 //ASIGNA EL VALOR A LA VARIABLE
-                ts.setValor(in.toString(), valor.ejecutar(ts));
+                ts.setValor(in.toString(), valor.ejecutar(AST,ts));
                 //informa en consola
-                System.out.println("DECLARACION-ASIGNACION DE VARIABLES ID: " + in.toString() + " valor: " + valor.ejecutar(ts));
+                System.out.println("DECLARACION-ASIGNACION DE VARIABLES ID: " + in.toString() + " valor: " + valor.ejecutar(AST,ts));
             }
         }
 

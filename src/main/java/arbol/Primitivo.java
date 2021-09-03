@@ -19,12 +19,13 @@ public class Primitivo implements Instruccion {
         this.valor=valor;
         
     }
-
-    
-    
     @Override
-    public Object ejecutar(TablaDeSimbolos ts) {
+    public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         System.out.println("primitivo");
+        if(tipo==Operacion.Tipo_dato.NUMEROO){
+   
+        }
+       
         return valor;
     }
 

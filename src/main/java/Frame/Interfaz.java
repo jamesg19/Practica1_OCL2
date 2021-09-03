@@ -5,7 +5,16 @@
  */
 package Frame;
 
+import Error.Exeption;
+import arbol.Arbol;
+import arbol.Asignacion;
+import arbol.Continue;
+import arbol.Declaracion;
+import arbol.Funcion;
 import arbol.Instruccion;
+import arbol.Principal;
+import arbol.Retorna;
+import arbol.Salir;
 import arbol.TablaDeSimbolos;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,8 +37,6 @@ import org.jfree.data.xy.XYSeriesCollection;
 public class Interfaz extends javax.swing.JFrame {
 
     NumeroLinea numeroLinea;
-
-
 
     /**
      * Creates new form Interfaz
@@ -356,10 +363,10 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void GraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraficoActionPerformed
         // TODO add your handling code here:
-        
+
         //nombre de la linea
         XYSeries oSeries = new XYSeries("a");
-        
+
         //valores de los puntos en HZ
         int year1 = Integer.parseInt("2000");
         int year2 = Integer.parseInt("3000");
@@ -370,15 +377,14 @@ public class Interfaz extends javax.swing.JFrame {
         oSeries.add(2, year2);
         oSeries.add(3, year3);
         oSeries.add(4, year4);
-        
-        
+
         XYSeriesCollection oDataset = new XYSeriesCollection();
         oDataset.addSeries(oSeries);
         //(x,y)
-                                                              //eje X, eje Y , colecion datos,parametros son de visualizacion
+        //eje X, eje Y , colecion datos,parametros son de visualizacion
         JFreeChart oChart = ChartFactory.createXYLineChart("", "Seg", "Hz", oDataset, PlotOrientation.VERTICAL, true, false, false);
         ChartPanel oPanel = new ChartPanel(oChart);
-        
+
         //agregar la grafica en el JPanel PanelGrafico(nombre del panel en JFrame
         PanelGrafico.setLayout(new java.awt.BorderLayout());
         PanelGrafico.add(oPanel);
@@ -421,7 +427,7 @@ public class Interfaz extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Interfaz().setVisible(true);
-                
+
             }
         });
 
@@ -437,51 +443,144 @@ public class Interfaz extends javax.swing.JFrame {
         modelo.addElement("E");
         ListaCanciones.setModel(modelo);
     }
-    
-    
-    private  void interpretar() {
+
+    private void interpretar() {
         analizadores.parser pars;
         LinkedList<Instruccion> AST_arbolSintaxisAbstracta = null;
         try {
+            //obtiene el codigo en el area de texto
             String codigo = AreaEditor.getText().toString();
-            codigo+="\n ";
+            codigo += "\n ";
             System.out.println(codigo);
             StringReader strs = new StringReader(codigo);
-
+            //analiza el codigo ingresado
             pars = new analizadores.parser(new analizadores.Lexico(strs));
             pars.parse();
-            
-            System.out.println("--------COMPILACION EXITOSA--------");
-            AST_arbolSintaxisAbstracta=pars.getAST();
+
+            AST_arbolSintaxisAbstracta = pars.getAST();
         } catch (Exception ex) {
             System.out.println("Error fatal en compilación de entrada.");
         }
         ejecutarAST(AST_arbolSintaxisAbstracta);
 
     }
-    
+
     private static void ejecutarAST(LinkedList<Instruccion> ast) {
-        if(ast==null){
+        if (ast == null) {
             System.out.println("No es posible ejecutar las instrucciones porque\r\n"
                     + "el árbol no fue cargado de forma adecuada por la existencia\r\n"
                     + "de errores léxicos o sintácticos.");
             return;
         }
         //Se crea una tabla de símbolos global para ejecutar las instrucciones.
-        TablaDeSimbolos ts=new TablaDeSimbolos();
-        //Se ejecuta cada instruccion en el ast, es decir, cada instruccion de 
-        //la lista principal de instrucciones.
-        for(Instruccion ins:ast){
+        TablaDeSimbolos TSGlobal = new TablaDeSimbolos();
+        Arbol ASTarbol= new Arbol();
+        LinkedList<Instruccion> ASTGlobal = null;
+        LinkedList<Exeption> ERRSemantico = null;
+
+        //PRIMER RECORRIDO DEL CODIGO BUSCANDO (DECLARACION Y ASIGNACION)
+        for (Instruccion ins : ast) {
+            
+            if(ins instanceof Funcion){
+                ASTGlobal.add(ins);
+                ASTarbol.setFUNCIONES(ASTGlobal);
+            }
+            
+            if (ins instanceof Declaracion || ins instanceof Asignacion) {
+                
+                ins.ejecutar(ASTarbol,TSGlobal);
+                //AGREGAR SALIR, RETURN, CONTINUE, EXEPTION
+                if (ins instanceof Continue) {
+                    Continue con=(Continue) ins;
+                    Exeption err=new Exeption("SEMANTICO","Sentencia Continuar fuera del ciclo",con.getLinea(),con.getColumna());
+                    System.out.println("ERROR SEMANTICO Sentencia Continuar fuera del ciclo "+con.getLinea()+" , "+con.getColumna());;
+                    //agrega el error a la lista de errores semanticos
+                    ERRSemantico.add(err);
+                }
+                if (ins instanceof Salir) {
+                    Salir con=(Salir) ins;
+                    Exeption err=new Exeption("SEMANTICO","Sentencia Salir fuera del ciclo",con.getLinea(),con.getColumna());
+                    System.out.println("ERROR SEMANTICO Salir Continuar fuera del ciclo "+con.getLinea()+" , "+con.getColumna());;
+                    //agrega el error a la lista de errores semanticos
+                    ERRSemantico.add(err);
+                }
+                if (ins instanceof Retorna) {
+                    Retorna con=(Retorna) ins;
+                    Exeption err=new Exeption("SEMANTICO","Sentencia Retorna ",con.getLinea(),con.getColumna());
+                    System.out.println("ERROR SEMANTICO Retorna Retorna "+con.getLinea()+" , "+con.getColumna());;
+                    //agrega el error a la lista de errores semanticos
+                    ERRSemantico.add(err);
+                }
+                if (ins instanceof Exeption) {
+                    Exeption ext = (Exeption) ins;
+                    System.out.println("ERROR SEMANTICO *&*&*&*&*&*&8/*/*/*/*/*/*/*/*/*/*");;
+                    System.out.println(ext.getDescripcion() + " linea" + ext.getLinea() + " columna " + ext.getColumna());
+                    ERRSemantico.add(ext);
+                }
+            }
+
+        }
+        //SEGUNDA PASADA
+        //SEGUNDO RECORRIDO DEL CODIGO BUSCANDO (EL METODO PRINCIPAL)
+        for (Instruccion ins : ast) {
             //Si existe un error léxico o sintáctico en cierta instrucción esta
             //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
             //es por esto que se hace esta validación.
-            if(ins!=null)
-                ins.ejecutar(ts);
+            if (ins instanceof Principal) {
+                
+                ins.ejecutar(ASTarbol,TSGlobal);
+                //AGREGAR SALIR, RETURN, CONTINUE, EXEPTION
+                if (ins instanceof Continue) {
+                    Continue con=(Continue) ins;
+                    Exeption err=new Exeption("SEMANTICO","Sentencia Continuar fuera del ciclo",con.getLinea(),con.getColumna());
+                    System.out.println("ERROR SEMANTICO Sentencia Continuar fuera del ciclo "+con.getLinea()+" , "+con.getColumna());;
+                    //agrega el error a la lista de errores semanticos
+                    ERRSemantico.add(err);
+                }
+                if (ins instanceof Salir) {
+                    Salir con=(Salir) ins;
+                    Exeption err=new Exeption("SEMANTICO","Sentencia Salir fuera del ciclo",con.getLinea(),con.getColumna());
+                    System.out.println("ERROR SEMANTICO Salir Continuar fuera del ciclo "+con.getLinea()+" , "+con.getColumna());;
+                    //agrega el error a la lista de errores semanticos
+                    ERRSemantico.add(err);
+                }
+                if (ins instanceof Retorna) {
+                    Retorna con=(Retorna) ins;
+                    Exeption err=new Exeption("SEMANTICO","Sentencia Retorna ",con.getLinea(),con.getColumna());
+                    System.out.println("ERROR SEMANTICO Retorna Retorna "+con.getLinea()+" , "+con.getColumna());;
+                    //agrega el error a la lista de errores semanticos
+                    ERRSemantico.add(err);
+                }
+                if (ins instanceof Exeption) {
+                    Exeption ext = (Exeption) ins;
+                    System.out.println("ERROR SEMANTICO ");;
+                    System.out.println(ext.getDescripcion() + " linea" + ext.getLinea() + " columna " + ext.getColumna());
+                    ERRSemantico.add(ext);
+                }
+            }
+
         }
     }
-    
-    
-    
+
+//    
+//            for(Instruccion ins:ast){
+//            //Si existe un error léxico o sintáctico en cierta instrucción esta
+//            //será inválida y se cargará como null, por lo tanto no deberá ejecutarse
+//            //es por esto que se hace esta validación.
+//            if(ins instanceof Principal){
+//                if(ins!=null)
+//                ins.ejecutar(TSGlobal);
+//            }
+//            
+//            if(ins instanceof Exeption){
+//                Exeption ext=(Exeption) ins;
+//                System.out.println("ERROR SEMANTICO *&*&*&*&*&*&8/*/*/*/*/*/*/*/*/*/*");;
+//                System.out.println(ext.getDescripcion()+" linea"+ext.getLinea()+" columna "+ext.getColumna());
+//                
+//            }
+//        }
+//    
+//    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea AreaEditor;
@@ -513,6 +612,5 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
-
 
 }
