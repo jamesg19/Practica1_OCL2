@@ -276,6 +276,7 @@ funcion::=
 parametros_funcion::=
     parametros_funcion:l COMA tipo_variable:tipo NOMBRE:id                      {:RESULT= l; RESULT.add(new Parametros(tipo,id));:}
     | tipo_variable:tipo NOMBRE:id                                              {:RESULT= new LinkedList<>(); RESULT.add(new Parametros(tipo,id));:}
+    |
 
 ;
 llamada_funcion::=
@@ -285,6 +286,7 @@ llamada_funcion::=
 valor_parametros::=
     valor_parametros:l COMA:c expresion:exp                                        {:RESULT= l; RESULT.add(new Valor_Parametro(exp,cleft+"",cright+""));:}
     | expresion:exp                                                                 {:RESULT= new LinkedList<>(); RESULT.add(new Valor_Parametro(exp,expleft+"",expright+""));:}
+    |
 ;
 
 expresion::=

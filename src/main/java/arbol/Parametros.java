@@ -14,7 +14,7 @@ public class Parametros implements Instruccion {
     //Identificador de la variable que se va a decrementar.
     private final Simbolo.Tipo tipo;
     private final String id;
-    private Object valor;
+    private Operacion valor;
 
     /**
      * Constructor de la clase Parametros de funcion
@@ -36,18 +36,21 @@ public class Parametros implements Instruccion {
             //declara la variable en el ambito de la funcion
             System.out.println("DECLARA VARIABLE EN LA FUNCION: " + id + " tipo: " + tipo);
             ts.add(new Simbolo(id ,tipo));
+            ts.setValor(id,valor.ejecutar(AST, ts));
             
             
         return null;
     }
 
-    public Object getValor() {
+    public Operacion getValorParametro() {
         return valor;
     }
 
-    public void setValor(Object valor) {
+    public void setValorParametro(Operacion valor) {
         this.valor = valor;
     }
+
+    
 
     public Simbolo.Tipo getTipo() {
         return tipo;

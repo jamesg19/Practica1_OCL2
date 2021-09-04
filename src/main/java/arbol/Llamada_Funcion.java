@@ -36,45 +36,78 @@ public class Llamada_Funcion implements Instruccion {
         try {
             int cantP1;
             int cantP2;
+            boolean coincide = false;
             TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
-            tablaLocal.addAll(ts);
+            //tablaLocal.addAll(ts);
 
             //VERIFICAR SI EXISTE LA FUNCION EL EL NOMBRE DADO
             if (AST.existeFuncion(nombre)) {
                 //obtener la cantidad de parametros de la funcion ingresada al AST
-                cantP1=AST.cantParametros(nombre);
+                try {
+                    System.out.println("P1");
+                    cantP1 = AST.cantParametros(nombre);
+                    System.out.println("P1");
+                } catch (Exception e) {
+                    
+                    cantP1 = 0;
+                }
                 //obtiene la cantidad de parametros ingresados en la llamada de funcion
-                cantP2=listaParametros.size();
-                
+                try {
+                    System.out.println("P2");
+                    cantP2 = listaParametros.size();
+                    System.out.println("P2");
+                } catch (Exception e) {
+                    
+                    cantP2 = 0;
+                }
+
                 //si la cantidad de parametros es la misma 
-                if(cantP1==cantP2){
+                if (cantP1 == cantP2) {
                     //castea a objeto funcion
                     //AST.getFuncion(nombre);
-                    if(AST.getFuncion(nombre) instanceof Funcion){
-                       Funcion func=(Funcion) AST.getFuncion(nombre);
-                       func.getParametros();
-                       
-                       for(int i=0;i<cantP1;i++){
-                           
-                           if(func.getParametros().get(i) instanceof Parametros){
-                               Parametros pa=(Parametros) func.getParametros().get(i);
-                               Valor_Parametro pa2= (Valor_Parametro) listaParametros.get(i);
-                               
-                               System.out.println("TIPO INGRESADO FUNC ");
-                               System.out.println(pa.getTipo());
-                               System.out.println("TIPO INGRESADO LLAMADA ");
-                               System.out.println("");
-                           }
-                           
-                           
-                       }
-                       
-                       
+                    if (AST.getFuncion(nombre) instanceof Funcion) {
+                        Funcion func = (Funcion) AST.getFuncion(nombre);
+                        func.getParametros();
+                        System.out.println(cantP1+" CANT ANTES DEL FOR");
+                        for (int i = 0; i < cantP1; i++) {
+
+                            if (func.getParametros().get(i) instanceof Parametros) {
+                                //funcion
+                                Parametros pa = (Parametros) func.getParametros().get(i);
+
+                                //llamada
+                                listaParametros.get(i).ejecutar(AST, tablaLocal);
+                                Valor_Parametro pa2 = (Valor_Parametro) listaParametros.get(i);
+
+                                System.out.println("-------------------");
+                                System.out.println("TIPO INGRESADO FUNC ");
+                                System.out.println(pa.getTipo());
+                                System.out.println("TIPO INGRESADO LLAMADA ");
+                                System.out.println(pa2.getTipo_parametro());
+                                System.out.println("-------------------");
+                                pa.setValorParametro((Operacion) pa2.getValor());
+
+                                if (pa.getTipo().toString().equals(pa2.getTipo_parametro().toString())) {
+                                    coincide = true;
+                                } else {
+                                    coincide = false;
+                                    System.out.println("NO COINCIDE");
+                                    return new Exeption("SEMANTICO", "El tipo de parametro no coincide el admitido en la funcion" + nombre, "", "");
+                                }
+                            }
+                        }
+                        
+                        //EJECUTA LA FUNCION
+                        if (coincide| cantP1==0) {
+
+                            System.out.println("COINCIDDE");
+                            AST.getFuncion(nombre).ejecutar(AST, tablaLocal);
+                        }
+
                     }
-                     
-                     
-                }else{
-                    return new Exeption("","","","");
+
+                } else {
+                    return new Exeption("", "", "", "");
                 }
 
             } else {
@@ -83,7 +116,8 @@ public class Llamada_Funcion implements Instruccion {
             }
 
         } catch (Exception e) {
-            System.out.println("ERROR EN METODO PRINCIPAL");
+            System.out.println(e);
+            System.out.println("ERROR EN LA LLAMAS DE FUNCION " + nombre);
             //return new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal",linea,columna);
         }
 

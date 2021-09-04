@@ -40,19 +40,19 @@ public class Valor_Parametro implements Instruccion {
             Object val = ((Object) valor.ejecutar(AST, ts));
 
             if (val.getClass().getSimpleName().toString().equals("Integer")) {
-                tipo_parametro="Integer";
+                tipo_parametro="NUMERO";
             }
             else if (val.getClass().getSimpleName().toString().equals("Char")) {
-                tipo_parametro="Char";
+                tipo_parametro="CARACTER";
             }
             else if (val.getClass().getSimpleName().toString().equals("Boolean")) {
-                tipo_parametro="Boolean";
+                tipo_parametro="BOOLEAN";
             }
             else if (val.getClass().getSimpleName().toString().equals("String")) {
-                tipo_parametro="String";
+                tipo_parametro="CADENA";
             }
             else if (val.getClass().getSimpleName().toString().equals("Double")) {
-                tipo_parametro="Double";
+                tipo_parametro="DECIMAL";
             }else{
                 tipo_parametro="Arreglo";
             }

@@ -32,21 +32,22 @@ public class Funcion implements Instruccion {
     @Override
     public Object ejecutar(Arbol AST, TablaDeSimbolos ts) {
 
-        try {
+        //try {
             // CREA UNA TABLA DE SIMBOLOS LOCAL
-            TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
-            tablaLocal.addAll(ts);
+            //TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
+            //tablaLocal.addAll(ts);
             //PARAMETROS
             //determina si viene un parametro para ejecutarlo
             if (!parametros.isEmpty()) {
                 for (Instruccion in : parametros) {
-                    in.ejecutar(AST, tablaLocal);
+                    in.ejecutar(AST, ts);
                 }
             }
             //INSTRUCCIONES
             for (Instruccion in : listaInstrucciones) {
                 //System.out.println(in.ejecutar(tablaLocal).getClass().getSimpleName());
-                in.ejecutar(AST, tablaLocal);
+                in.ejecutar(AST, ts);
+                
                 if (in instanceof Continue) {
                     Continue cont = (Continue) in;
 
@@ -57,13 +58,20 @@ public class Funcion implements Instruccion {
 
                     return new Exeption("SEMANTICO", "Salir en Funcion ", "", "");
                 }
+                if (in instanceof Exeption) {
+                    Exeption ext = (Exeption) in;
+                    System.out.println("ERROR SEMANTICO ");;
+                    System.out.println(ext.getDescripcion() + " linea" + ext.getLinea() + " columna " + ext.getColumna());
+                    return ext;
+                }
 
                 
             }
-        } catch (Exception e) {
-            System.out.println("ERROR EN METODO PRINCIPAL");
+        //} catch (Exception e) {
+            //System.out.println(e);
+            //System.out.println("ERROR EN FUNCION");
             //return new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal",linea,columna);
-        }
+        //}
 
         return null;
     }

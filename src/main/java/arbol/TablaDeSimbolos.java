@@ -1,6 +1,7 @@
 package arbol;
 
 
+import Error.Exeption;
 import java.util.LinkedList;
 
 
@@ -20,7 +21,14 @@ public class TablaDeSimbolos extends LinkedList<Simbolo>{
         
         for(Simbolo s:this){
             if(s.getId().equals(id)){
+                try{
+                Object va=s.getValor();
                 return s.getValor();
+                }catch(Exception e){
+                    System.out.println("LA VARIABLE "+id+" ES NULA. ");
+                    //return new Exeption("SEMANTICO"," la variable "+id+" es Nula","","");
+                }
+                //return s.getValor();
             }
         }
         System.out.println("La variable "+id+" no existe en este ámbito.");
