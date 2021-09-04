@@ -38,10 +38,14 @@ public class Funcion implements Instruccion {
             //tablaLocal.addAll(ts);
             //PARAMETROS
             //determina si viene un parametro para ejecutarlo
+            try{
             if (!parametros.isEmpty()) {
                 for (Instruccion in : parametros) {
                     in.ejecutar(AST, ts);
                 }
+            }
+            } catch(Exception e){
+                
             }
             //INSTRUCCIONES
             for (Instruccion in : listaInstrucciones) {

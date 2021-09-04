@@ -44,18 +44,18 @@ public class Llamada_Funcion implements Instruccion {
             if (AST.existeFuncion(nombre)) {
                 //obtener la cantidad de parametros de la funcion ingresada al AST
                 try {
-                    System.out.println("P1");
+
                     cantP1 = AST.cantParametros(nombre);
-                    System.out.println("P1");
+
                 } catch (Exception e) {
                     
                     cantP1 = 0;
                 }
                 //obtiene la cantidad de parametros ingresados en la llamada de funcion
                 try {
-                    System.out.println("P2");
+
                     cantP2 = listaParametros.size();
-                    System.out.println("P2");
+
                 } catch (Exception e) {
                     
                     cantP2 = 0;
