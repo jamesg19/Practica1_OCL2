@@ -48,12 +48,13 @@ non terminal ini;
 non terminal LinkedList<Instruccion> instrucciones;
 non terminal LinkedList<Instruccion> sino_si, lista_casos, parametros_funcion;
 non terminal LinkedList<String> vars_id;
+non terminal LinkedList<Valor_Parametro> valor_parametros;
 non terminal Instruccion instruccion;
 non terminal Instruccion imprimir, mensaje, incremental;
 non terminal Instruccion declaracion_variables, declaracion_variables2, asignacion_variables, arreglos; 
 non terminal Instruccion asignacion_arreglo, si, switch, para1, para2, mientras, continuar;
 non terminal Instruccion salir, retorna, hacer_mientras, reproducir, esperar, ordenar; 
-non terminal Instruccion principal, funcion;
+non terminal Instruccion principal, funcion, llamada_funcion;
 non terminal Operacion expresion;
 non terminal pistas, parametros , lista_Dimension, lista_expresiones2, keep;
 non terminal Simbolo.Tipo tipo_variable;
@@ -97,6 +98,8 @@ parametros ::=
 instruccion ::=
     imprimir:a                                  {: RESULT=a; :}
     | principal:a                               {: RESULT=a; :}
+    | funcion:a                                 {: RESULT=a; :}
+    | llamada_funcion:a                         {: RESULT=a; :}
     | declaracion_variables:a                   {: RESULT=a; :}  
     | declaracion_variables2:a                   {: RESULT=a; :}                
     | asignacion_variables:a                    {: RESULT=a; :}                  
@@ -275,6 +278,15 @@ parametros_funcion::=
     | tipo_variable:tipo NOMBRE:id                                              {:RESULT= new LinkedList<>(); RESULT.add(new Parametros(tipo,id));:}
 
 ;
+llamada_funcion::=
+    NOMBRE:name PARENTESIS_ABRE valor_parametros:param PARENTESIS_CIERRA        {: RESULT=new Llamada_Funcion(name,param,nameleft+"",nameright+""); :}
+;
+
+valor_parametros::=
+    valor_parametros:l COMA:c expresion:exp                                        {:RESULT= l; RESULT.add(new Valor_Parametro(exp,cleft+"",cright+""));:}
+    | expresion:exp                                                                 {:RESULT= new LinkedList<>(); RESULT.add(new Valor_Parametro(exp,expleft+"",expright+""));:}
+;
+
 expresion::=
     expresion:a SUMA expresion:b                    {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.SUMA);:}
     | expresion:a RESTA expresion:b                 {:RESULT=new Operacion(a,b,Operacion.Tipo_operacion.RESTA);:} 

@@ -17,7 +17,10 @@ public class Funcion implements Instruccion {
     /**
      * Constructor de la clase Funcion
      *
+     * @param tipo
      * @param id identificador de la variable que se va a incrementar
+     * @param parametros
+     * @param b
      */
     public Funcion(Simbolo.Tipo tipo, String id, LinkedList<Instruccion> parametros, LinkedList<Instruccion> b) {
         this.tipo = tipo;

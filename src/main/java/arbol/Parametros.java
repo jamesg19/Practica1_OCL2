@@ -14,6 +14,7 @@ public class Parametros implements Instruccion {
     //Identificador de la variable que se va a decrementar.
     private final Simbolo.Tipo tipo;
     private final String id;
+    private Object valor;
 
     /**
      * Constructor de la clase Parametros de funcion
@@ -39,4 +40,23 @@ public class Parametros implements Instruccion {
             
         return null;
     }
+
+    public Object getValor() {
+        return valor;
+    }
+
+    public void setValor(Object valor) {
+        this.valor = valor;
+    }
+
+    public Simbolo.Tipo getTipo() {
+        return tipo;
+    }
+
+    public String getId() {
+        return id;
+    }
+    
+    
+    
 }

@@ -475,7 +475,7 @@ public class Interfaz extends javax.swing.JFrame {
         //Se crea una tabla de símbolos global para ejecutar las instrucciones.
         TablaDeSimbolos TSGlobal = new TablaDeSimbolos();
         Arbol ASTarbol= new Arbol();
-        LinkedList<Instruccion> ASTGlobal = null;
+        LinkedList<Instruccion> ASTGlobal = new LinkedList<Instruccion>();
         LinkedList<Exeption> ERRSemantico = null;
 
         //PRIMER RECORRIDO DEL CODIGO BUSCANDO (DECLARACION Y ASIGNACION)
