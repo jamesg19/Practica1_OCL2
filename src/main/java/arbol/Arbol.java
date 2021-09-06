@@ -10,6 +10,7 @@ import java.util.LinkedList;
 public class Arbol implements Instruccion {
 
    private  LinkedList<Instruccion> FUNCIONES;
+   LinkedList<Exeption> ERROR = new LinkedList<Exeption>();
 
     /**
      * Constructor de la ARBOL
@@ -100,6 +101,14 @@ public class Arbol implements Instruccion {
 
     public void setFUNCIONES(LinkedList<Instruccion> FUNCIONES) {
         this.FUNCIONES = FUNCIONES;
+    }
+
+    public LinkedList<Exeption> getERROR() {
+        return ERROR;
+    }
+
+    public void setERROR(LinkedList<Exeption> ERROR) {
+        this.ERROR = ERROR;
     }
     
     

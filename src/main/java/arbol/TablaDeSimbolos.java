@@ -25,8 +25,8 @@ public class TablaDeSimbolos extends LinkedList<Simbolo>{
                 Object va=s.getValor();
                 return s.getValor();
                 }catch(Exception e){
-                    System.out.println("LA VARIABLE "+id+" ES NULA. ");
-                    //return new Exeption("SEMANTICO"," la variable "+id+" es Nula","","");
+                    System.out.println("LA VARIABLE "+id+" ES NULAA........................ ");
+                    return new Exeption("SEMANTICO"," la variable "+id+" es Nula","","");
                 }
                 //return s.getValor();
             }
@@ -52,14 +52,24 @@ public class TablaDeSimbolos extends LinkedList<Simbolo>{
         System.out.println("La variable "+id+" no existe en este ámbito, por lo "
                 + "que no puede asignársele un valor.");
     }
+    boolean existeVariable(String id){
+        for(Simbolo s:this){
+            
+            if(s.getId().equals(id)){
+                
+                return true;
+            }
+        }
+        return false;
+    }
     
     Simbolo.Tipo getTipo(String id){
         //verifica cada simbolo
         for(Simbolo s:this){
             //verifica que la variable sea igual
-                System.out.println("VERIFICA IGUALDAD "+id+" con "+s.getId());
+                //System.out.println("VERIFICA IGUALDAD "+id+" con "+s.getId());
             if(s.getId().equals(id)){
-                System.out.println("TIPOOOO: "+s.getTipo());
+                //System.out.println("TIPOOOO: "+s.getTipo());
                 return s.getTipo();
             }
             

@@ -34,7 +34,7 @@ public class Parametros implements Instruccion {
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
             //declara la variable en el ambito de la funcion
-            System.out.println("DECLARA VARIABLE EN LA FUNCION: " + id + " tipo: " + tipo);
+            //System.out.println("DECLARA VARIABLE EN LA FUNCION: " + id + " tipo: " + tipo);
             ts.add(new Simbolo(id ,tipo));
             ts.setValor(id,valor.ejecutar(AST, ts));
             

@@ -68,7 +68,7 @@ public class Llamada_Funcion implements Instruccion {
                     if (AST.getFuncion(nombre) instanceof Funcion) {
                         Funcion func = (Funcion) AST.getFuncion(nombre);
                         func.getParametros();
-                        System.out.println(cantP1+" CANT ANTES DEL FOR");
+
                         for (int i = 0; i < cantP1; i++) {
 
                             if (func.getParametros().get(i) instanceof Parametros) {
@@ -79,12 +79,7 @@ public class Llamada_Funcion implements Instruccion {
                                 listaParametros.get(i).ejecutar(AST, tablaLocal);
                                 Valor_Parametro pa2 = (Valor_Parametro) listaParametros.get(i);
 
-                                System.out.println("-------------------");
-                                System.out.println("TIPO INGRESADO FUNC ");
-                                System.out.println(pa.getTipo());
-                                System.out.println("TIPO INGRESADO LLAMADA ");
-                                System.out.println(pa2.getTipo_parametro());
-                                System.out.println("-------------------");
+
                                 pa.setValorParametro((Operacion) pa2.getValor());
 
                                 if (pa.getTipo().toString().equals(pa2.getTipo_parametro().toString())) {
@@ -98,10 +93,14 @@ public class Llamada_Funcion implements Instruccion {
                         }
                         
                         //EJECUTA LA FUNCION
-                        if (coincide| cantP1==0) {
+                        if (coincide|| cantP1==0) {
 
-                            System.out.println("COINCIDDE");
+                            //System.out.println("COINCIDDE");
                             AST.getFuncion(nombre).ejecutar(AST, tablaLocal);
+                            Funcion f=(Funcion) AST.getFuncion(nombre);
+                            f.getRetorna();
+                            //System.out.println(f.getRetorna());
+                            return f.getRetorna().ejecutar(AST, tablaLocal);
                         }
 
                     }

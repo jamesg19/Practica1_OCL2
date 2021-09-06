@@ -56,7 +56,8 @@ non terminal Instruccion asignacion_arreglo, si, switch, para1, para2, mientras,
 non terminal Instruccion salir, retorna, hacer_mientras, reproducir, esperar, ordenar; 
 non terminal Instruccion principal, funcion, llamada_funcion;
 non terminal Operacion expresion;
-non terminal pistas, parametros , lista_Dimension, lista_expresiones2, keep;
+non terminal LinkedList<Instruccion> lista_Dimension;
+non terminal pistas, parametros , lista_expresiones2, keep;
 non terminal Simbolo.Tipo tipo_variable;
 non terminal valores, sub_expresion;
 non terminal Instruccion metodos_retorno, sumarizar;
@@ -122,21 +123,22 @@ instruccion ::=
     | NOMBRE:a SUMA_SIMPLIFICADA expresion:b                 {:RESULT=new SumaSimplificada(a,b);:}
     | error {: System.err.println("error :( ..."); :}
 ;
+
 principal::=
-    PRINCIPAL PARENTESIS_ABRE PARENTESIS_CIERRA INDENT_A instrucciones:ins INDENT_C
-    {: RESULT=new Principal(ins); :}
+    PRINCIPAL:p PARENTESIS_ABRE PARENTESIS_CIERRA INDENT_A instrucciones:ins INDENT_C
+    {: RESULT=new Principal(ins,pleft+"",pright+""); :}
 ;
 
 imprimir::=
     IMPRIMIR PARENTESIS_ABRE expresion:a PARENTESIS_CIERRA          {:RESULT=new Imprimir(a);:}
 ;
 declaracion_variables::=
-      keep VAR tipo_variable:b vars_id:a                                {:RESULT=new Declaracion(a,b);:}
+      keep VAR:v tipo_variable:b vars_id:a                                {:RESULT=new Declaracion(a,b,vleft+"",vright+"");:}
     
 ;
 declaracion_variables2::=
-    keep VAR tipo_variable:b vars_id:a IGUAL expresion:c           {:RESULT=new Declaracion(a,b,c);:}
-    //| keep VAR tipo_variable:b vars_id:a IGUAL metodos_retorno:c           {:RESULT=new Declaracion(a,b,c);:}
+    keep VAR:v tipo_variable:b vars_id:a IGUAL expresion:c           {:RESULT=new Declaracion(a,b,c,vleft+"",vright+"");:}
+    //| keep VAR:v tipo_variable:b vars_id:a IGUAL metodos_retorno:c           {:RESULT=new Declaracion(a,b,c);:}
 ;
 asignacion_variables::= 
      vars_id:a IGUAL expresion:b                                    {:RESULT=new Asignacion(a,b);:} 
@@ -146,19 +148,20 @@ vars_id::=
     | NOMBRE:a                                                          {:RESULT= new LinkedList<>(); RESULT.add(a);:}
 ;
 arreglos::=
-    keep VAR tipo_variable ARREGLO NOMBRE lista_Dimension 
-    | keep VAR tipo_variable ARREGLO NOMBRE
-    | keep VAR tipo_variable ARREGLO NOMBRE lista_Dimension IGUAL lista_expresiones2
-
+    keep VAR tipo_variable:tipo ARREGLO:ar vars_id:id lista_Dimension:dim               {: RESULT=new DeclaracionArreglo(tipo,id,dim,arleft+"",arright+""); :}
+    | keep VAR tipo_variable:tipo ARREGLO vars_id:id
+    | keep VAR tipo_variable:tipo ARREGLO vars_id:id lista_Dimension:dim IGUAL lista_expresiones2
 ;
+
 asignacion_arreglo::=
     NOMBRE:a lista_Dimension:c IGUAL expresion:b
 ;
-lista_Dimension::=
-    lista_Dimension:lst CORCHETE_ABRE expresion CORCHETE_CIERRA   {: RESULT=Integer.parseInt(lst.toString())+1;  ;  :}
-    | CORCHETE_ABRE expresion CORCHETE_CIERRA                     {: RESULT=1; :}
 
+lista_Dimension::=
+    lista_Dimension:lst CORCHETE_ABRE expresion:exp CORCHETE_CIERRA   {:RESULT= lst; RESULT.add(exp);:}
+    | CORCHETE_ABRE expresion:exp CORCHETE_CIERRA                     {:RESULT= new LinkedList<>(); RESULT.add(exp);:}
 ;
+
 lista_expresiones2::=
     lista_expresiones2 COMA LLAVE_ABRE valores LLAVE_CIERRA 
     | LLAVE_ABRE valores LLAVE_CIERRA
@@ -317,5 +320,6 @@ expresion::=
     | NOMBRE:a                                      {:RESULT=new Operacion(a,Operacion.Tipo_operacion.IDENTIFICADOR);:}
     | CADENAA:a                                     {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CADENA);:}
     | CHARR:a                                       {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CARACTER);:} 
+    | llamada_funcion:a                             {:   RESULT= new Operacion(a,Operacion.Tipo_operacion.LLAMADA_RETURN); :}
     
 ;

@@ -16,7 +16,10 @@ package arbol;
 public class Simbolo {
     private final Tipo tipo;
     private final String id;
-    private Object valor;    
+    private Object valor;  
+    private ARREGLO arr;
+    private Object arreglo;
+    private int CANT_DIMENSION=0;
     /**
      * Constructor de la clase Símbolo.
      * @param id identificador de la variable que se desea almacenar
@@ -25,6 +28,33 @@ public class Simbolo {
     public Simbolo(String id, Tipo tipo) {
         this.tipo = tipo;
         this.id = id;
+        this.arr=null;
+    }
+    /**
+     * PRIMER CONSTRUCTOR DE ARREGLO EN DECLARACION-DIMENSION
+     * keep VAR TIPO ARREGLO ID [][]
+     * @param id
+     * @param tipo
+     * @param arr
+     * @param c 
+     */
+    public Simbolo(String id, Tipo tipo, ARREGLO  arr, int c) {
+        this.tipo = tipo;
+        this.id = id;
+        this.arr=arr;
+        this.CANT_DIMENSION=c;
+    }
+    /**
+     * PRIMER CONSTRUCTOR DE ARREGLO EN DECLARACION-DIMENSION
+     * keep VAR TIPO ARREGLO ID 
+     * @param id
+     * @param tipo
+     * @param arr 
+     */
+    public Simbolo(String id, Tipo tipo, ARREGLO  arr) {
+        this.tipo = tipo;
+        this.id = id;
+        this.arr=arr;
     }
 
     /**
@@ -61,6 +91,10 @@ public class Simbolo {
         CADENA,
         DECIMAL,
         BOOLEAN,
-        CARACTER
+        CARACTER,
+        
+    }
+    public static enum ARREGLO{
+        ARREGLO
     }
 }

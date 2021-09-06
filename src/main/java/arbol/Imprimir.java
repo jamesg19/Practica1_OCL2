@@ -1,6 +1,8 @@
 
 package arbol;
 
+import Error.Exeption;
+
 /**
  * Clase que ejecuta las acciones de una instrucción imprimir y que implementa
  * la interfaz de instrucción
@@ -29,8 +31,12 @@ public class Imprimir implements Instruccion{
      */
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
+        try{
         System.out.println(contenido.ejecutar(AST,ts).toString());
         return null;
+        } catch(Exception e){
+            return new Exeption("SEMANTICO","ERROR ","","");
+        }
     }
     
 }

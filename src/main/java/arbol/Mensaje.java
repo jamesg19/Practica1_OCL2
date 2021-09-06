@@ -1,6 +1,7 @@
 
 package arbol;
 
+import Error.Exeption;
 import javax.swing.JOptionPane;
 
 /**
@@ -32,10 +33,14 @@ public class Mensaje implements Instruccion{
      */
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
+        try{
         mensaje=contenido.ejecutar(AST,ts).toString();
         JOptionPane.showMessageDialog(null,mensaje);
         //System.out.println(contenido.ejecutar(ts).toString());
         return null;
+        } catch(Exception e){
+            return new Exeption("SEMANTICO","ERROR AL EJECUTAR LA INSTRUCCION MENSAJE","","");
+        }
     }
 
     public String getMensaje() {

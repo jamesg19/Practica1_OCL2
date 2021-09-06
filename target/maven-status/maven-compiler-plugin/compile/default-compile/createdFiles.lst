@@ -35,7 +35,6 @@ arbol\Instruccion.class
 Frame\Interfaz$4.class
 arbol\Switch.class
 analizadores\parser$CUP$parser$actions.class
-.netbeans_automatic_build
 arbol\Operacion.class
 Frame\Interfaz$3.class
 arbol\TablaDeSimbolos.class
@@ -46,4 +45,5 @@ Frame\Interfaz$6.class
 arbol\Continue.class
 arbol\Decremento.class
 Frame\NumeroLinea.class
+arbol\DeclaracionArreglo.class
 arbol\Imprimir.class

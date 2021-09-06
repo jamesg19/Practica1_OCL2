@@ -13,6 +13,7 @@ public class Funcion implements Instruccion {
     private final String id;
     private final LinkedList<Instruccion> parametros;
     private final Simbolo.Tipo tipo;
+    private Operacion retorna;
 
     /**
      * Constructor de la clase Funcion
@@ -32,7 +33,7 @@ public class Funcion implements Instruccion {
     @Override
     public Object ejecutar(Arbol AST, TablaDeSimbolos ts) {
 
-        //try {
+        try {
             // CREA UNA TABLA DE SIMBOLOS LOCAL
             //TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
             //tablaLocal.addAll(ts);
@@ -62,6 +63,12 @@ public class Funcion implements Instruccion {
 
                     return new Exeption("SEMANTICO", "Salir en Funcion ", "", "");
                 }
+                if (in instanceof Retorna) {
+
+                    Retorna cont = (Retorna) in;
+                    retorna=cont.getValorReturn();
+                    return retorna;
+                }
                 if (in instanceof Exeption) {
                     Exeption ext = (Exeption) in;
                     System.out.println("ERROR SEMANTICO ");;
@@ -71,11 +78,11 @@ public class Funcion implements Instruccion {
 
                 
             }
-        //} catch (Exception e) {
-            //System.out.println(e);
-            //System.out.println("ERROR EN FUNCION");
-            //return new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal",linea,columna);
-        //}
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println("ERROR EN FUNCION");
+            return new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal","","");
+        }
 
         return null;
     }
@@ -94,6 +101,14 @@ public class Funcion implements Instruccion {
 
     public Simbolo.Tipo getTipo() {
         return tipo;
+    }
+
+    public Operacion getRetorna() {
+        return retorna;
+    }
+
+    public void setRetorna(Operacion retorna) {
+        this.retorna = retorna;
     }
 
 }

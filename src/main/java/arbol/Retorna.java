@@ -18,7 +18,7 @@ public class Retorna implements Instruccion{
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         
-        return a.ejecutar(AST,ts);
+        return a;
     }
 
     public String getLinea() {
@@ -35,6 +35,10 @@ public class Retorna implements Instruccion{
 
     public void setColumna(String columna) {
         this.columna = columna;
+    }
+
+    public Operacion getValorReturn() {
+        return a;
     }
     
 }

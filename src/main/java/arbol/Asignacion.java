@@ -6,6 +6,7 @@
 
 package arbol;
 
+import Error.Exeption;
 import java.util.LinkedList;
 
 /**
@@ -41,8 +42,13 @@ public class Asignacion implements Instruccion{
     @Override
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         for(String in : id){
+            if(valor.ejecutar(AST,ts) instanceof Exeption){
+                Exeption ex=(Exeption) valor.ejecutar(AST,ts);
+                return ex;
+            }else{
             System.out.println("ASIGNACION DE VARIABLE ID: "+in.toString()+" valor: "+valor.ejecutar(AST,ts));
             ts.setValor(in.toString(),valor.ejecutar(AST,ts));
+            }
         }
         
         return null;

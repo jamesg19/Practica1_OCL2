@@ -10,14 +10,18 @@ import java.util.LinkedList;
 public class Principal implements Instruccion {
 
    private final LinkedList<Instruccion> listaInstrucciones;
+   private final String linea;
+   private final String columna;
 
     /**
      * Constructor de la clase Incremento
      *
      * @param id identificador de la variable que se va a incrementar
      */
-    public Principal(LinkedList<Instruccion> b ) {
+    public Principal(LinkedList<Instruccion> b ,String linea, String columna) {
         this.listaInstrucciones=b;
+        this.linea=linea;
+        this.columna=columna;
     }
 
 
@@ -35,6 +39,21 @@ public class Principal implements Instruccion {
                     
                     return new Exeption("SEMANTICO","Continue en Principal",cont.getLinea(),cont.getColumna());
                 }
+                if(in instanceof Salir){
+                    Salir cont=(Salir) in;
+                    
+                    return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
+                }
+                if(in instanceof Exeption){
+                    Exeption cont=(Exeption) in;
+                    
+                    return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
+                }
+                if(in instanceof Principal){
+                    Principal cont=(Principal) in;
+                    
+                    return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
+                }
                 
                     in.ejecutar(AST,tablaLocal);
             }
@@ -45,6 +64,14 @@ public class Principal implements Instruccion {
         }
         
         return null;
+    }
+
+    public String getLinea() {
+        return linea;
+    }
+
+    public String getColumna() {
+        return columna;
     }
 
     
