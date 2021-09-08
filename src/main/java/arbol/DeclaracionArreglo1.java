@@ -1,6 +1,7 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -10,7 +11,7 @@ import java.util.LinkedList;
  *
  * @author James
  */
-public class DeclaracionArreglo1 implements Instruccion {
+public class DeclaracionArreglo1 implements Instruccion,Serializable {
 
     private LinkedList<String> id;
     private final Operacion valor;

@@ -1,13 +1,14 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  *
  * @author James
  */
-public class Funcion implements Instruccion {
+public class Funcion implements Instruccion,Serializable {
 
     private final LinkedList<Instruccion> listaInstrucciones;
     private final String id;
@@ -32,11 +33,9 @@ public class Funcion implements Instruccion {
 
     @Override
     public Object ejecutar(Arbol AST, TablaDeSimbolos ts) {
-
+        boolean hayRetorna=false;
         try {
             // CREA UNA TABLA DE SIMBOLOS LOCAL
-            //TablaDeSimbolos tablaLocal = new TablaDeSimbolos();
-            //tablaLocal.addAll(ts);
             //PARAMETROS
             //determina si viene un parametro para ejecutarlo
             try{
@@ -51,24 +50,26 @@ public class Funcion implements Instruccion {
             //INSTRUCCIONES
             for (Instruccion in : listaInstrucciones) {
                 //System.out.println(in.ejecutar(tablaLocal).getClass().getSimpleName());
-                in.ejecutar(AST, ts);
+                
                 
                 if (in instanceof Continue) {
                     Continue cont = (Continue) in;
 
-                    return new Exeption("SEMANTICO", "Continue en Funcion ", "", "");
+                    return new Exeption("SEMANTICO", "Continue en Funcion ", cont.getLinea(), cont.getColumna());
                 }
                 if (in instanceof Salir) {
+                    
                     Salir cont = (Salir) in;
 
-                    return new Exeption("SEMANTICO", "Salir en Funcion ", "", "");
+                    return new Exeption("SEMANTICO", "Salir en Funcion ", cont.getLinea(), cont.getColumna());
                 }
                 if (in instanceof Retorna) {
-
+                    hayRetorna=true;
                     Retorna cont = (Retorna) in;
                     retorna=cont.getValorReturn();
                     return retorna;
                 }
+                in.ejecutar(AST, ts);
                 if (in instanceof Exeption) {
                     Exeption ext = (Exeption) in;
                     System.out.println("ERROR SEMANTICO ");;
@@ -76,6 +77,9 @@ public class Funcion implements Instruccion {
                     return ext;
                 }
 
+                
+            }
+            if(hayRetorna){
                 
             }
         } catch (Exception e) {

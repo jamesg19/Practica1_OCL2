@@ -5,11 +5,13 @@
  */
 package arbol;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James
  */
-public class Decremento implements Instruccion {
+public class Decremento implements Instruccion,Serializable {
 
     //Identificador de la variable que se va a decrementar.
     private final String id;

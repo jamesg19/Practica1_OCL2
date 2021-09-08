@@ -1,5 +1,6 @@
 package arbol;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.LinkedList;
  * la interfaz de instrucción
  * @author James
  */
-public class Para1 implements Instruccion{
+public class Para1 implements Instruccion,Serializable{
     /**
      * Condición de la sentencia mientras.
      */

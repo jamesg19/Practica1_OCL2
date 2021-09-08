@@ -1,13 +1,16 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author James
  */
-public class Llamada_Funcion implements Instruccion {
+public class Llamada_Funcion implements Instruccion,Serializable {
 
     private final String nombre;
     private final LinkedList<Valor_Parametro> listaParametros;
@@ -87,7 +90,7 @@ public class Llamada_Funcion implements Instruccion {
                                 } else {
                                     coincide = false;
                                     System.out.println("NO COINCIDE");
-                                    return new Exeption("SEMANTICO", "El tipo de parametro no coincide el admitido en la funcion" + nombre, "", "");
+                                    return new Exeption("SEMANTICO", "El tipo de parametro no coincide el admitido en la funcion" + nombre, fila, columna);
                                 }
                             }
                         }
@@ -100,7 +103,11 @@ public class Llamada_Funcion implements Instruccion {
                             Funcion f=(Funcion) AST.getFuncion(nombre);
                             f.getRetorna();
                             //System.out.println(f.getRetorna());
+                            try{
                             return f.getRetorna().ejecutar(AST, tablaLocal);
+                            } catch(Exception e){
+                                return new Exeption("SEMANTICO"," NO HAY INSTRUCCION RETURN DENTRO DE LA FUNCION:"+nombre,"","");
+                            }
                         }
 
                     }
@@ -116,7 +123,8 @@ public class Llamada_Funcion implements Instruccion {
 
         } catch (Exception e) {
             System.out.println(e);
-            System.out.println("ERROR EN LA LLAMAS DE FUNCION " + nombre);
+            Logger.getLogger(Llamada_Funcion.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("ERROR EN LA LLAMADA DE FUNCION " + nombre);
             //return new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal",linea,columna);
         }
 

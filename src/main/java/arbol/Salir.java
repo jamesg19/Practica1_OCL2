@@ -1,7 +1,9 @@
 package arbol;
 
+import java.io.Serializable;
 
-public class Salir implements Instruccion{
+
+public class Salir implements Instruccion,Serializable{
     private String linea;
     private String columna;
 

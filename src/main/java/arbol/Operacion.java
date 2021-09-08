@@ -1,6 +1,7 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 
 /**
  * Clase que ejecuta las acciones de una operación, ya sea aritmética o
@@ -9,7 +10,7 @@ import Error.Exeption;
  *
  * @author James
  */
-public class Operacion implements Instruccion {
+public class Operacion implements Instruccion,Serializable {
 
     /**
      * Enumeración del tipo_operacion de operación que puede ser ejecutada por

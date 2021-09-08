@@ -1,7 +1,9 @@
 package arbol;
 
+import java.io.Serializable;
 
-public class Retorna implements Instruccion{
+
+public class Retorna implements Instruccion,Serializable{
     private String linea;
     private String columna;
     private final Operacion a;

@@ -1,6 +1,7 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.LinkedList;
  * la interfaz de instrucción
  * @author James
  */
-public class Hacer_Mientras implements Instruccion{
+public class Hacer_Mientras implements Instruccion,Serializable{
     /**
      * Condición de la sentencia hacer mientras.
      */

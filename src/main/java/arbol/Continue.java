@@ -1,7 +1,9 @@
 package arbol;
 
+import java.io.Serializable;
 
-public class Continue implements Instruccion{
+
+public class Continue implements Instruccion,Serializable{
     private String linea;
     private String columna;
 

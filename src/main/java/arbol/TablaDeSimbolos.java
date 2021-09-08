@@ -2,10 +2,11 @@ package arbol;
 
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 
-public class TablaDeSimbolos extends LinkedList<Simbolo>{
+public class TablaDeSimbolos extends LinkedList<Simbolo> implements Serializable{
 
     LinkedList<Instruccion> FUNCIONES;
     

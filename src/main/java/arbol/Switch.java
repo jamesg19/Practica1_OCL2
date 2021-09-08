@@ -1,5 +1,6 @@
 package arbol;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.LinkedList;
  *
  * @author James
  */
-public class Switch implements Instruccion {
+public class Switch implements Instruccion,Serializable {
 
     private Operacion variable;
     private Operacion variableSwitch;

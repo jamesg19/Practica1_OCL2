@@ -1,13 +1,14 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
  *
  * @author James
  */
-public class Principal implements Instruccion {
+public class Principal implements Instruccion,Serializable {
 
    private final LinkedList<Instruccion> listaInstrucciones;
    private final String linea;

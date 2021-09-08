@@ -2,13 +2,14 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 
 /**
  * Clase que ejecuta las acciones de una instrucción imprimir y que implementa
  * la interfaz de instrucción
  * @author Erick
  */
-public class Imprimir implements Instruccion{
+public class Imprimir implements Instruccion,Serializable{
     /**
      * Contenido que será impreso al ejecutar la instrucción imprimir, este debe
      * ser una instrucción que genere un valor al ser ejecutada.

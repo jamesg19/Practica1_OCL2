@@ -1,10 +1,7 @@
-/*
- * Ejemplo desarrollado por Erick Navarro
- * Blog: e-navarro.blogspot.com
- * Septiembre - 2015
- */
 
 package arbol;
+
+import java.io.Serializable;
 
 /**
  * Clase símbolo, que es un nodo de la tabla de símbolos, estos símbolos son 
@@ -13,7 +10,7 @@ package arbol;
  * el lenguaje y agregar más tipos.
  * @author James
  */
-public class Simbolo {
+public class Simbolo implements Serializable{
     private final Tipo tipo;
     private final String id;
     private Object valor;  

@@ -6,12 +6,13 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 
 /**
  *
  * @author James
  */
-public class SumaSimplificada implements Instruccion {
+public class SumaSimplificada implements Instruccion,Serializable {
 
     //Identificador de la variable que se va a incrementar.
     private final String id;

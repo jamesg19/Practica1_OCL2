@@ -1,5 +1,6 @@
 package arbol;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.LinkedList;
  * la interfaz de instrucción
  * @author James
  */
-public class If implements Instruccion{
+public class If implements Instruccion,Serializable{
 
     private final Operacion condicion;
     private final LinkedList<Instruccion> listaInstrucciones;

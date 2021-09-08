@@ -6,11 +6,13 @@
 
 package arbol;
 
+import java.io.Serializable;
+
 /**
  * 
  * @author James Gramajo 
  */
-public class Primitivo implements Instruccion {
+public class Primitivo implements Instruccion,Serializable {
     private Object valor;
     private Operacion.Tipo_dato tipo;
     

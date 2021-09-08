@@ -1,12 +1,14 @@
 package arbol;
 
 import Error.Exeption;
+import Reproductor.GestorReproducir;
+import java.io.Serializable;
 
 /**
  *
  * @author James
  */
-public class Esperar implements Instruccion {
+public class Esperar implements Instruccion,Serializable {
 
 
     private final Operacion tiempo;
@@ -17,7 +19,7 @@ public class Esperar implements Instruccion {
     private final String columna;
 
     /**
-     * Constructor de la clase Incremento
+     * Constructor de la clase Esperar
      *
      * @param id identificador de la variable que se va a incrementar
      */
@@ -38,7 +40,7 @@ public class Esperar implements Instruccion {
         TIEMPO=Integer.parseInt(tiempo.ejecutar(AST,ts).toString());
         CANAL=Integer.parseInt(canal.ejecutar(AST,ts).toString());
         
-        
+        AST.getSONIDO().add(new GestorReproducir(false,TIEMPO,CANAL));
         return null;
         }
         catch(Exception e){

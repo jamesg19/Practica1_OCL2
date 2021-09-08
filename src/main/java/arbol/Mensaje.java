@@ -2,6 +2,7 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import javax.swing.JOptionPane;
 
 /**
@@ -9,7 +10,7 @@ import javax.swing.JOptionPane;
  * la interfaz de instrucción
  * @author James
  */
-public class Mensaje implements Instruccion{
+public class Mensaje implements Instruccion,Serializable{
     /**
      * Contenido que será impreso al ejecutar la instrucción imprimir, este debe
      * ser una instrucción que genere un valor al ser ejecutada.

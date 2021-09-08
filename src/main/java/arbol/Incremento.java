@@ -1,11 +1,12 @@
 package arbol;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James
  */
-public class Incremento implements Instruccion {
-
+public class Incremento implements Instruccion ,Serializable{
     //Identificador de la variable que se va a incrementar.
     private final String id;
 

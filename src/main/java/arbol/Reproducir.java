@@ -1,12 +1,14 @@
 package arbol;
 
 import Error.Exeption;
+import Reproductor.GestorReproducir;
+import java.io.Serializable;
 
 /**
  *
  * @author James
  */
-public class Reproducir implements Instruccion {
+public class Reproducir implements Instruccion,Serializable {
 
     //Identificador de la variable que se va a incrementar.
     private final String nota;
@@ -34,6 +36,7 @@ public class Reproducir implements Instruccion {
     public Object ejecutar(Arbol AST, TablaDeSimbolos ts) {
 
         try {
+            //octava
             int octavaa = Integer.parseInt(octava.ejecutar(AST, ts).toString());
             if(octavaa>=0&& octavaa<=8){
                 
@@ -42,7 +45,12 @@ public class Reproducir implements Instruccion {
             }
             int tiempoo = Integer.parseInt(tiempo.ejecutar(AST, ts).toString());
             int canall = Integer.parseInt(canal.ejecutar(AST, ts).toString());
-
+            //agrega al arbol la reproduccion de notas
+            
+            AST.getSONIDO().add(new GestorReproducir(true,nota,octavaa,tiempoo,canall));
+            
+            
+            
             return tiempoo;
         } catch (Exception e) {
             return new Exeption("SEMANTICO", " LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal", linea, columna);

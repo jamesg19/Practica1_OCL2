@@ -1,5 +1,6 @@
 package arbol;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.LinkedList;
  *
  * @author James
  */
-public class Case implements Instruccion {
+public class Case implements Instruccion,Serializable {
 
     private final Operacion condicion;
     private final LinkedList<Instruccion> listaInstrucciones;

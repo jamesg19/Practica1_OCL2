@@ -7,6 +7,7 @@
 package arbol;
 
 import Error.Exeption;
+import java.io.Serializable;
 import java.util.LinkedList;
 
 /**
@@ -14,7 +15,7 @@ import java.util.LinkedList;
  * la interfaz de instrucción
  * @author James
  */
-public class Asignacion implements Instruccion{
+public class Asignacion implements Instruccion,Serializable{
     /**
      * Identificador de la variable a la que se le asigna el valor.
      */

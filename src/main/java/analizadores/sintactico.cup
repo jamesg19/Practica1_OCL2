@@ -2,17 +2,21 @@ package analizadores;
 import java_cup.runtime.*;
 import java.util.LinkedList;
 import arbol.*;
+import Error.Exeption;
+import Reproductor.Pista;
 import arbol.Simbolo.Tipo;
 import java.util.ArrayList;
 
 
 parser code 
 {:
-
+    Pista pista;
     public LinkedList<Instruccion> AST;
     ArrayList<String> listVAR = new ArrayList<String>();
+    LinkedList<Exeption> ERROR = new LinkedList<Exeption>();
 
     public void syntax_error(Symbol s){ 
+        ERROR.add(new Exeption("SINTACTICO","No se esperaba este componente"+s.value,(s.left)+"",s.right+""));
             System.err.println("Error Sintáctico en la Línea " + (s.left) +" Columna "+s.right+ ". No se esperaba este componente: " +s.value+"."); 
     } 
 
@@ -22,6 +26,12 @@ parser code
 
     public LinkedList<Instruccion> getAST() {
         return AST;
+    }
+    public Pista getPista() {
+        return pista;
+    }
+    public LinkedList<Exeption> getSintacticos() {
+        return ERROR;
     }
 
 :};
@@ -47,7 +57,7 @@ terminal String SUMA, RESTA, MULTIPLICACION, DIVISION, MODULO, POTENCIA;
 non terminal ini;
 non terminal LinkedList<Instruccion> instrucciones;
 non terminal LinkedList<Instruccion> sino_si, lista_casos, parametros_funcion;
-non terminal LinkedList<String> vars_id;
+non terminal LinkedList<String> vars_id, parametros;
 non terminal LinkedList<Valor_Parametro> valor_parametros;
 non terminal Instruccion instruccion;
 non terminal Instruccion imprimir, mensaje, incremental;
@@ -57,7 +67,7 @@ non terminal Instruccion salir, retorna, hacer_mientras, reproducir, esperar, or
 non terminal Instruccion principal, funcion, llamada_funcion;
 non terminal Operacion expresion;
 non terminal LinkedList<Instruccion> lista_Dimension;
-non terminal pistas, parametros , lista_expresiones2, keep;
+non terminal pistas , lista_expresiones2, keep;
 non terminal Simbolo.Tipo tipo_variable;
 non terminal valores, sub_expresion;
 non terminal Instruccion metodos_retorno, sumarizar;
@@ -87,14 +97,15 @@ instrucciones ::=
     | instruccion:a {: RESULT=new LinkedList<>(); RESULT.add(a); :}
 ; 
 pistas ::=
-    PISTA NOMBRE
-    | PISTA NOMBRE EXTIENDE parametros
+    PISTA NOMBRE:id                                      {: pista= new Pista(id); :} 
+    | PISTA NOMBRE:id EXTIENDE parametros:param          {: pista= new Pista(id,param); :} 
 
 ;
 parametros ::=
-    parametros COMA NOMBRE
-    | NOMBRE
+    parametros:l COMA NOMBRE:a                              {: RESULT= l; RESULT.add(a);:} 
+    | NOMBRE:a                                              {: RESULT= new LinkedList<>(); RESULT.add(a); :} 
 ;
+
 
 instruccion ::=
     imprimir:a                                  {: RESULT=a; :}
@@ -144,7 +155,7 @@ asignacion_variables::=
      vars_id:a IGUAL expresion:b                                    {:RESULT=new Asignacion(a,b);:} 
 ;
 vars_id::=
-    vars_id:l COMA NOMBRE:a                                             {:RESULT= l; RESULT.add(a);:}                        
+    vars_id:l COMA NOMBRE:a                                             {:RESULT= l; RESULT.add(a);:}                         
     | NOMBRE:a                                                          {:RESULT= new LinkedList<>(); RESULT.add(a);:}
 ;
 arreglos::=
@@ -321,5 +332,6 @@ expresion::=
     | CADENAA:a                                     {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CADENA);:}
     | CHARR:a                                       {:RESULT=new Operacion(a.substring(1, a.length() - 1),Operacion.Tipo_operacion.CARACTER);:} 
     | llamada_funcion:a                             {:   RESULT= new Operacion(a,Operacion.Tipo_operacion.LLAMADA_RETURN); :}
+    
     
 ;

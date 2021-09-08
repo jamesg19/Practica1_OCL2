@@ -5,11 +5,13 @@
  */
 package arbol;
 
+import java.io.Serializable;
+
 /**
  *
  * @author James
  */
-public class Parametros implements Instruccion {
+public class Parametros implements Instruccion,Serializable {
 
     //Identificador de la variable que se va a decrementar.
     private final Simbolo.Tipo tipo;

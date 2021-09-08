@@ -4,7 +4,7 @@ package arbol;
  *
  * @author James
  */
-public interface Instruccion {
+public interface Instruccion  {
     /**
      * Método que ejecuta la accion propia de la instrucción que se implemente.
      * @param ts Tabla de símbolos del ámbito padre de la sentencia.
