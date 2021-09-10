@@ -89,6 +89,7 @@ public class Simbolo implements Serializable{
         DECIMAL,
         BOOLEAN,
         CARACTER,
+        VOID
         
     }
     public static enum ARREGLO{

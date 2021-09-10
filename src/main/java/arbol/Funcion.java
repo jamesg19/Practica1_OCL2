@@ -15,6 +15,7 @@ public class Funcion implements Instruccion,Serializable {
     private final LinkedList<Instruccion> parametros;
     private final Simbolo.Tipo tipo;
     private Operacion retorna;
+    private boolean hayReturn=false;
 
     /**
      * Constructor de la clase Funcion
@@ -72,7 +73,7 @@ public class Funcion implements Instruccion,Serializable {
                 in.ejecutar(AST, ts);
                 if (in instanceof Exeption) {
                     Exeption ext = (Exeption) in;
-                     AST.getERROR().add(ext);
+                     //AST.getERROR().add(ext);
                     System.out.println("ERROR SEMANTICO ");;
                     System.out.println(ext.getDescripcion() + " linea" + ext.getLinea() + " columna " + ext.getColumna());
                     return ext;

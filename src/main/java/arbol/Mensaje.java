@@ -36,7 +36,8 @@ public class Mensaje implements Instruccion,Serializable{
     public Object ejecutar(Arbol AST,TablaDeSimbolos ts) {
         try{
         mensaje=contenido.ejecutar(AST,ts).toString();
-        JOptionPane.showMessageDialog(null,mensaje);
+        AST.getMensaje().add(mensaje);
+        //JOptionPane.showMessageDialog(null,mensaje);
         //System.out.println(contenido.ejecutar(ts).toString());
         return null;
         } catch(Exception e){

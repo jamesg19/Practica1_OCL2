@@ -107,8 +107,12 @@ public class Llamada_Funcion implements Instruccion,Serializable {
                             try{
                             return f.getRetorna().ejecutar(AST, tablaLocal);
                             } catch(Exception e){
+                                
+                                
                                 AST.getERROR().add(new Exeption("SEMANTICO"," NO HAY INSTRUCCION RETURN DENTRO DE LA FUNCION:"+nombre,"",""));
                                 return new Exeption("SEMANTICO"," NO HAY INSTRUCCION RETURN DENTRO DE LA FUNCION:"+nombre,"","");
+                                
+                            
                             }
                         }
 

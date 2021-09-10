@@ -61,11 +61,11 @@ public class GuardarArchivoBinario {
     public boolean verificar_existencia_archivo(String path) {
         File archivo = new File(path);
         if (archivo.exists()) {
-            System.out.println("EL ARCHIVO EXISTEEEEE!!!!PTM");
+            //System.out.println("EL ARCHIVO EXISTEEEEE!!!!PTM");
             return true;
             //System.out.println("OJO: ¡¡No existe el archivo de configuración!!");
         } else {
-            System.out.println("EL ARCHIVOOO NO EXISTEEEE!!!!");
+            //System.out.println("EL ARCHIVOOO NO EXISTEEEE!!!!");
             return false;
         }
     }
@@ -81,6 +81,17 @@ public class GuardarArchivoBinario {
         } else {
             JOptionPane.showMessageDialog(null, "NO SE PUDOELIMINAR LA PISTA "+nombre);
         }
+    }
+    
+    
+    public void EliminarArchivoEditar(String nombre) {
+        String basePath = new File("").getAbsolutePath();
+        basePath += "\\src\\main\\java\\ArchivoPista\\";
+        
+        File fichero = new File(basePath+nombre+".dat");
+
+        fichero.delete();
+       
     }
 
 

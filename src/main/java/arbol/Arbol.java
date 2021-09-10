@@ -12,8 +12,9 @@ import java.util.LinkedList;
 public class Arbol implements Instruccion,Serializable {
 
    private  LinkedList<Instruccion> FUNCIONES;
-   LinkedList<Exeption> ERROR = new LinkedList<Exeption>();
+   private LinkedList<Exeption> ERROR = new LinkedList<Exeption>();
    LinkedList<NotasLeidas> SONIDO = new LinkedList<NotasLeidas>();
+   private LinkedList<String> mensaje = new LinkedList<String>();
 
     /**
      * Constructor de la ARBOL
@@ -121,9 +122,14 @@ public class Arbol implements Instruccion,Serializable {
     public void setSONIDO(LinkedList<NotasLeidas> SONIDO) {
         this.SONIDO = SONIDO;
     }
-    
-    
-    
+
+    public LinkedList<String> getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(LinkedList<String> mensaje) {
+        this.mensaje = mensaje;
+    }
     
     
 }

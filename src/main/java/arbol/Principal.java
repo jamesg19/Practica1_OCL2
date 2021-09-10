@@ -47,7 +47,7 @@ public class Principal implements Instruccion,Serializable {
                 }
                 if(in instanceof Exeption){
                     Exeption cont=(Exeption) in;
-                     AST.getERROR().add(new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna()));
+                     //AST.getERROR().add(new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna()));
                     return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
                 }
                 if(in instanceof Principal){

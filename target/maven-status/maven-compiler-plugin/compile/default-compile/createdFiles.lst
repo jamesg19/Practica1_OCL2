@@ -22,10 +22,12 @@ arbol\Parametros.class
 analizadores\sym.class
 Frame\Interfaz$11.class
 Error\Exeption.class
+Reproductor\Modificar.class
 analizadores\parser.class
 arbol\Simbolo$ARREGLO.class
 arbol\Simbolo.class
 Frame\Interfaz$1.class
+Frame\Interfaz$14.class
 arbol\Llamada_Funcion.class
 arbol\DeclaracionArreglo1.class
 arbol\Esperar.class
@@ -45,6 +47,7 @@ Frame\Interfaz$7.class
 menu\Main.class
 Reproductor\GestorGrafica.class
 arbol\Instruccion.class
+Frame\Interfaz$13.class
 Servidor\Server.class
 Reproductor\NotasLeidas.class
 Frame\Interfaz$4.class

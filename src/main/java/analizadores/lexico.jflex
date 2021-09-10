@@ -1,6 +1,10 @@
 package analizadores;
 import static analizadores.sym.*;
 import java_cup.runtime.Symbol; 
+import Error.Exeption;
+import java.util.LinkedList;
+
+
 //COMANDOS
 // java -jar jflex-full-1.8.2.jar lexico.jflex
 // java -jar java-cup-11b.jar sintactico.cup
@@ -32,6 +36,7 @@ CHARRR=(\'([(-Za-zÀ-ÖØ-öø-ÿ#-&]|([#][n]|[#][t]|[#][r]|[#][\']|[#][\"]|[#][
 //codigo de errores lexicos
 
     StringBuffer string = new StringBuffer();
+    LinkedList<Exeption> ERROR = new LinkedList<Exeption>();
     int indentados = 0;
     private Symbol symbol(int type, Object value){
         return new Symbol(type, yyline+1, yycolumn, value);
@@ -39,6 +44,11 @@ CHARRR=(\'([(-Za-zÀ-ÖØ-öø-ÿ#-&]|([#][n]|[#][t]|[#][r]|[#][\']|[#][\"]|[#][
     private Symbol symbol(int type){
         return new Symbol(type, yyline+1, yycolumn, yytext());
     }
+
+    public LinkedList<Exeption> getLexicos() {
+        return ERROR;
+    }
+
     public Symbol indent(String analizar, boolean tieneTab, boolean esEOF) {
         if (!esEOF) {
             if (tieneTab) {
@@ -237,5 +247,6 @@ CHARRR=(\'([(-Za-zÀ-ÖØ-öø-ÿ#-&]|([#][n]|[#][t]|[#][r]|[#][\']|[#][\"]|[#][
 
 [^]
 {
+    ERROR.add(new Exeption("LEXICO"," no se esperaba este componente "+yytext()+"",+yyline+1+"",yycolumn+""));
     System.err.println("Este es un error lexico: "+yytext()+", en la linea: "+yyline+1+", en la columna: "+yycolumn);
 }
