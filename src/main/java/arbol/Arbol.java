@@ -1,7 +1,7 @@
 package arbol;
 
 import Error.Exeption;
-import Reproductor.GestorReproducir;
+import Reproductor.NotasLeidas;
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -13,7 +13,7 @@ public class Arbol implements Instruccion,Serializable {
 
    private  LinkedList<Instruccion> FUNCIONES;
    LinkedList<Exeption> ERROR = new LinkedList<Exeption>();
-   LinkedList<GestorReproducir> SONIDO = new LinkedList<GestorReproducir>();
+   LinkedList<NotasLeidas> SONIDO = new LinkedList<NotasLeidas>();
 
     /**
      * Constructor de la ARBOL
@@ -114,11 +114,11 @@ public class Arbol implements Instruccion,Serializable {
         this.ERROR = ERROR;
     }
 
-    public LinkedList<GestorReproducir> getSONIDO() {
+    public LinkedList<NotasLeidas> getSONIDO() {
         return SONIDO;
     }
 
-    public void setSONIDO(LinkedList<GestorReproducir> SONIDO) {
+    public void setSONIDO(LinkedList<NotasLeidas> SONIDO) {
         this.SONIDO = SONIDO;
     }
     

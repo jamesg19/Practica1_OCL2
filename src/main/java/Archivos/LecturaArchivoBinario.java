@@ -27,7 +27,8 @@ public class LecturaArchivoBinario {
         basePath+="\\src\\main\\java\\ArchivoPista\\";
         
         File archivo= new File(basePath+nombre+".dat");
-
+        System.out.println("BUSCANDO :"+basePath+nombre+".dat");
+        System.out.println(nombre);
         try{
            FileInputStream fis= new FileInputStream(archivo);
            ObjectInputStream ois;
@@ -40,8 +41,9 @@ public class LecturaArchivoBinario {
             
             
         }catch(Exception e){
-            
+            System.out.println("ERROR AL LEER ARCHIVO"); 
         }
+        System.out.println("NO SE PUDO ENCONTRAR");
         return null;
     }
     

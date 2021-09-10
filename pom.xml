@@ -36,6 +36,11 @@
             <artifactId>richtextfx</artifactId>
             <version>0.4</version>
         </dependency>
+        <dependency>
+            <groupId>jfugue</groupId>
+            <artifactId>jfugue</artifactId>
+            <version>5.0.9</version>
+        </dependency>
 
 
     </dependencies>

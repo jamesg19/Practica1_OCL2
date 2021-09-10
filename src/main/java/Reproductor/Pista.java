@@ -21,6 +21,10 @@ public class Pista implements  Serializable {
 
     private LinkedList<String> extiende;
     private LinkedList<Instruccion> listaInstrucciones;
+    private String CODIGO;
+    private LinkedList<NotasLeidas> SONIDO = new LinkedList<NotasLeidas>();
+    
+    
     public Pista(String nombre) {
 
         this.nombre = nombre;
@@ -58,6 +62,23 @@ public class Pista implements  Serializable {
         this.listaInstrucciones = listaInstrucciones;
     }
 
+    public String getCODIGO() {
+        return CODIGO;
+    }
+
+    public void setCODIGO(String CODIGO) {
+        this.CODIGO = CODIGO;
+    }
+
+    public LinkedList<NotasLeidas> getSONIDO() {
+        return SONIDO;
+    }
+
+    public void setSONIDO(LinkedList<NotasLeidas> SONIDO) {
+        this.SONIDO = SONIDO;
+    }
+    
+    
     
     
     

@@ -1,7 +1,7 @@
 package arbol;
 
 import Error.Exeption;
-import Reproductor.GestorReproducir;
+import Reproductor.NotasLeidas;
 import java.io.Serializable;
 
 /**
@@ -19,7 +19,7 @@ public class Reproducir implements Instruccion,Serializable {
     private final String columna;
 
     /**
-     * Constructor de la clase Incremento
+     * Constructor de la clase Reproducir
      *
      * @param id identificador de la variable que se va a incrementar
      */
@@ -38,7 +38,7 @@ public class Reproducir implements Instruccion,Serializable {
         try {
             //octava
             int octavaa = Integer.parseInt(octava.ejecutar(AST, ts).toString());
-            if(octavaa>=0&& octavaa<=8){
+            if(octavaa>=0 && octavaa<=8){
                 
             }else{
                 return new Exeption("SEMANTICO","RANGO FUERA DEL LIMITE EN OCTAVA(1-8) ",linea,columna);
@@ -47,13 +47,15 @@ public class Reproducir implements Instruccion,Serializable {
             int canall = Integer.parseInt(canal.ejecutar(AST, ts).toString());
             //agrega al arbol la reproduccion de notas
             
-            AST.getSONIDO().add(new GestorReproducir(true,nota,octavaa,tiempoo,canall));
+            AST.getSONIDO().add(new NotasLeidas(true,nota,octavaa,tiempoo,canall));
             
             
             
             return tiempoo;
         } catch (Exception e) {
-            return new Exeption("SEMANTICO", " LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal", linea, columna);
+            System.out.println(e);
+            System.out.println("LOS PARA,ETROS DE REPRODUCIR DEBEN SER DE TIPO ENTERO");
+            return new Exeption("SEMANTICO", " LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n (String nota ,int octava, int tiempo, int canal)", linea, columna);
         }
     }
 

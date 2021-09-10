@@ -8,8 +8,9 @@ package Frame;
 import Archivos.GuardarArchivoBinario;
 import Archivos.LecturaArchivoBinario;
 import Error.Exeption;
-import Reproductor.GestorReproducir;
+import Reproductor.NotasLeidas;
 import Reproductor.Pista;
+import Reproductor.Play;
 import arbol.Arbol;
 import arbol.Asignacion;
 import arbol.Continue;
@@ -36,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 //import javax.swing.TimerQueue;
 import javax.swing.Timer;
 import org.jfree.chart.ChartFactory;
@@ -50,7 +52,7 @@ import org.jfree.data.xy.XYSeriesCollection;
  * @author James Gramajo
  */
 public class Interfaz extends javax.swing.JFrame {
-
+    Pista pista ;
     NumeroLinea numeroLinea;
     JFileChooser seleccionar = new JFileChooser();
     File archivo;
@@ -58,8 +60,12 @@ public class Interfaz extends javax.swing.JFrame {
     FileOutputStream salida;
     String fichero=null;
     analizadores.parser pars;
-    LinkedList<GestorReproducir> SONIDO = new LinkedList<GestorReproducir>();
-    LinkedList<Exeption> ERRSemantico = new LinkedList<Exeption>();
+    private LinkedList<NotasLeidas> SONIDO = new LinkedList<NotasLeidas>();
+    private LinkedList<Exeption> ERRSemantico = new LinkedList<Exeption>();
+    
+    public XYSeriesCollection oDataset = new XYSeriesCollection();
+    public JFreeChart oChart = ChartFactory.createXYLineChart("", "Seg", "Hz", oDataset, PlotOrientation.VERTICAL, true, false, false);
+    public ChartPanel oPanel = new ChartPanel(oChart);
 
     /**
      * Creates new form Interfaz
@@ -67,6 +73,7 @@ public class Interfaz extends javax.swing.JFrame {
     public Interfaz() {
         initComponents();
         mostrar();
+        limpiar_grafica();
         numeroLinea = new NumeroLinea(AreaEditor);
         ScrollEditor.setRowHeaderView(numeroLinea);
     }
@@ -117,8 +124,18 @@ public class Interfaz extends javax.swing.JFrame {
         CrearButton.setText("Crear");
 
         jButton1.setText("Play");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Eliminar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         ListaReproduccion.setForeground(new java.awt.Color(102, 102, 102));
         jScrollPane1.setViewportView(ListaReproduccion);
@@ -148,13 +165,22 @@ public class Interfaz extends javax.swing.JFrame {
         jScrollPane3.setViewportView(Canciones);
 
         ListaCanciones.setForeground(new java.awt.Color(102, 102, 102));
+        ListaCanciones.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                ListaCancionesAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
         jScrollPane4.setViewportView(ListaCanciones);
 
         javax.swing.GroupLayout PanelGraficoLayout = new javax.swing.GroupLayout(PanelGrafico);
         PanelGrafico.setLayout(PanelGraficoLayout);
         PanelGraficoLayout.setHorizontalGroup(
             PanelGraficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 472, Short.MAX_VALUE)
+            .addGap(0, 489, Short.MAX_VALUE)
         );
         PanelGraficoLayout.setVerticalGroup(
             PanelGraficoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,61 +207,55 @@ public class Interfaz extends javax.swing.JFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 420, Short.MAX_VALUE)
                 .addComponent(Grafico, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(195, 195, 195))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
+                        .addGap(29, 29, 29)
                         .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                            .addGap(77, 77, 77)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel2Layout.createSequentialGroup()
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(10, 10, 10)))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(46, 46, 46)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(31, 31, 31)
+                .addComponent(PanelGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton3)
-                            .addComponent(jButton4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(PanelGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PanelGrafico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(24, 24, 24)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jButton3)
+                                    .addComponent(jButton4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CrearButton)
@@ -243,7 +263,7 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(Grafico))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Biblioteca", jPanel2);
@@ -308,7 +328,7 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(PanelEditorCodigoLayout.createSequentialGroup()
                 .addComponent(ScrollEditor, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Compilar, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE))
+                .addComponent(Compilar, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Editor de Codigo", PanelEditorCodigo);
@@ -318,16 +338,16 @@ public class Interfaz extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(66, 66, 66)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 552, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 589, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jMenu1.setText("Archivos");
@@ -394,37 +414,6 @@ public class Interfaz extends javax.swing.JFrame {
         ScrollEditor.setRowHeaderView(numeroLinea);
     }//GEN-LAST:event_AreaEditorCaretUpdate
 
-    private void GraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraficoActionPerformed
-        // TODO add your handling code here:
-
-        //nombre de la linea
-        XYSeries oSeries = new XYSeries("a");
-
-        //valores de los puntos en HZ
-        int year1 = Integer.parseInt("2000");
-        int year2 = Integer.parseInt("3000");
-        int year3 = Integer.parseInt("2500");
-        int year4 = Integer.parseInt("4000");
-
-        oSeries.add(0,0);
-        oSeries.add(1, year1);
-        oSeries.add(2, year2);
-        oSeries.add(3, year3);
-        oSeries.add(4, year4);
-
-        XYSeriesCollection oDataset = new XYSeriesCollection();
-        oDataset.addSeries(oSeries);
-        //(x,y)
-        //eje X, eje Y , colecion datos,parametros son de visualizacion
-        JFreeChart oChart = ChartFactory.createXYLineChart("", "Seg", "Hz", oDataset, PlotOrientation.VERTICAL, true, false, false);
-        ChartPanel oPanel = new ChartPanel(oChart);
-
-        //agregar la grafica en el JPanel PanelGrafico(nombre del panel en JFrame
-        PanelGrafico.setLayout(new java.awt.BorderLayout());
-        PanelGrafico.add(oPanel);
-        PanelGrafico.validate();
-    }//GEN-LAST:event_GraficoActionPerformed
-
     private void CompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompilarActionPerformed
         // TODO add your handling code here:
         byte[] bytes = AreaEditor.getText().getBytes(StandardCharsets.UTF_8);
@@ -437,6 +426,8 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenu1ActionPerformed
 
     private void AbrirBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbrirBtnActionPerformed
+        
+
         // TODO add your handling code here:
         if (seleccionar.showDialog(null, "Abrir") == JFileChooser.APPROVE_OPTION) {
             archivo = seleccionar.getSelectedFile();
@@ -457,16 +448,75 @@ public class Interfaz extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_AbrirBtnActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        play();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void ListaCancionesAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_ListaCancionesAncestorAdded
+        // TODO add your handling code here:
+        mostrar();
+    }//GEN-LAST:event_ListaCancionesAncestorAdded
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        eliminar();
+        mostrar();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void GraficoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraficoActionPerformed
+        //        // TODO add your handling code here:
+        //
+        //        //nombre de la linea
+        //        XYSeries oSeries = new XYSeries("a");
+        //
+        //        //valores de los puntos en HZ
+        //        int year1 = Integer.parseInt("2000");
+        //        int year2 = Integer.parseInt("3000");
+        //        int year3 = Integer.parseInt("2500");
+        //        int year4 = Integer.parseInt("4000");
+        //
+        //        oSeries.add(0,0);
+        //        oSeries.add(1, year1);
+        //        oSeries.add(2, year2);
+        //        oSeries.add(3, year3);
+        //        oSeries.add(4, year4);
+        //
+        //        XYSeries oSeries2 = new XYSeries("b");
+        //        oSeries2.add(1,600);
+        //        oSeries2.add(2,700);
+        //        oSeries2.add(3,500);
+        //        oSeries2.add(4,1000);
+        //
+        //
+        //
+        //        //XYSeriesCollection oDataset = new XYSeriesCollection();
+        //        oDataset.addSeries(oSeries);
+        //        oDataset.addSeries(oSeries2);
+        //        //(x,y)
+        //        //eje X, eje Y , colecion datos,parametros son de visualizacion
+        //        JFreeChart oChart = ChartFactory.createXYLineChart("", "Seg", "Hz", oDataset, PlotOrientation.VERTICAL, true, false, false);
+        //        ChartPanel oPanel = new ChartPanel(oChart);
+        //
+        //
+        //
+
+    }//GEN-LAST:event_GraficoActionPerformed
+
     public void mostrar() {
+        
         LecturaArchivoBinario ver_pistas= new LecturaArchivoBinario();
+        
         LinkedList<String> pistas=new LinkedList();
+        
         ver_pistas.ver_pistas();
+        
         pistas=ver_pistas.getPistas();
         
         DefaultListModel modelo = new DefaultListModel();
         
         for(int i=0;i<pistas.size();i++){
-            System.out.println(pistas.get(i));
+            //System.out.println(pistas.get(i));
             modelo.addElement(pistas.get(i));
         }
 
@@ -475,7 +525,7 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void interpretar(String codigo_codificado) {
         
-        Pista pista;
+        
         LinkedList<Instruccion> AST_arbolSintaxisAbstracta = null;
         try {
             
@@ -486,10 +536,10 @@ public class Interfaz extends javax.swing.JFrame {
             //analiza el codigo ingresado
             pars = new analizadores.parser(new analizadores.Lexico(strs));
             pars.parse();
-
             AST_arbolSintaxisAbstracta = pars.getAST();
             pista=pars.getPista();
             pista.setListaInstrucciones(AST_arbolSintaxisAbstracta);
+            pista.setCODIGO(codigo_codificado);
             ejecutarAST(pista);
             ERRSemantico=pars.getSintacticos();
             
@@ -599,13 +649,9 @@ public class Interfaz extends javax.swing.JFrame {
             }
 
         }
-       
+       guardarPista(ASTarbol,p);
         
-        GuardarArchivoBinario gr=new GuardarArchivoBinario(p);
-        gr.guardarObjeto();
-        
-        
-        
+
     }
 
 
@@ -640,6 +686,64 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
+public void guardarPista(Arbol ASTarbol, Pista p) {
+        //obtenemos las notas en reproducir y de espera
+        SONIDO = ASTarbol.getSONIDO();
+        //le asginamos las notas al objeto pista
+        p.setSONIDO(SONIDO);
+        //le asignamos las notas de sonido al objeto pista
+
+        GuardarArchivoBinario gr = new GuardarArchivoBinario(p);
+        gr.guardarObjeto();
+    }
+
+    public void play() {
+        try{
+        if(!ListaCanciones.isSelectionEmpty()){
+    
+        if(!ListaCanciones.getSelectedValue().isEmpty()){
+            
+        
+
+            limpiar_grafica();
+            Play play=new Play(PanelGrafico,ListaCanciones.getSelectedValue(),oDataset,oChart,oPanel);
+            play.reproducirPistaSeleccionada();
+        }
+    
+        }else{
+            JOptionPane.showMessageDialog(null, "No has seleccionado ninguna pista");
+        }
+        }catch(Exception e){
+            System.out.println("________ERROR EN METODO PLAY"+e);
+        }
+    }
+
+    public void eliminar() {
+        if(!ListaCanciones.isSelectionEmpty()){
+        GuardarArchivoBinario gr = new GuardarArchivoBinario();
+        gr.EliminarArchivo(ListaCanciones.getSelectedValue());
+        }else{
+            JOptionPane.showMessageDialog(null, "No has seleccionado ninguna pista");
+        }
+    }
+    
+    public void limpiar_grafica(){
+        try{
+        oDataset.removeAllSeries();
+        oChart = ChartFactory.createXYLineChart("", "Seg", "Hz", oDataset, PlotOrientation.VERTICAL, true, false, false);
+                
+                
+        //ChartPanel oPanel = new ChartPanel(oChart);
+        oPanel.setChart(oChart);
+
+        //agregar la grafica en el JPanel PanelGrafico(nombre del panel en JFrame
+        PanelGrafico.setLayout(new java.awt.BorderLayout());
+        PanelGrafico.add(oPanel);
+        PanelGrafico.validate();
+        } catch(Exception e){
+            System.out.println("____________ERROR AL LIMPIAR LA GRAFICA"+e);
+        }
+    }
 
     
 }

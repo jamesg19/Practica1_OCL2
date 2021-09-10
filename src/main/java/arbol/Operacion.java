@@ -548,7 +548,8 @@ public class Operacion implements Instruccion,Serializable {
                 double a = Double.parseDouble(operadorIzq.ejecutar(AST, ts).toString());
                 double b = Double.parseDouble(operadorDer.ejecutar(AST, ts).toString());
                 double result = (double) Math.pow(a, b);
-                return result;
+                
+                return (int) result;
             } // DECIMAL ^ ENTERO
             else if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Double") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
                 double a = Double.parseDouble(operadorIzq.ejecutar(AST, ts).toString());

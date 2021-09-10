@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * @author James Gramajo 
  */
 public class Server {
-    static int PUERTO = 5000;
+    static int PUERTO = 4999;
     ServerSocket sc;
     Socket so;
     DataOutputStream salida;

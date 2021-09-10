@@ -1,7 +1,7 @@
 package arbol;
 
 import Error.Exeption;
-import Reproductor.GestorReproducir;
+import Reproductor.NotasLeidas;
 import java.io.Serializable;
 
 /**
@@ -40,10 +40,11 @@ public class Esperar implements Instruccion,Serializable {
         TIEMPO=Integer.parseInt(tiempo.ejecutar(AST,ts).toString());
         CANAL=Integer.parseInt(canal.ejecutar(AST,ts).toString());
         
-        AST.getSONIDO().add(new GestorReproducir(false,TIEMPO,CANAL));
+        AST.getSONIDO().add(new NotasLeidas(false,TIEMPO,CANAL));
         return null;
         }
         catch(Exception e){
+            System.out.println("SEMANTICO"+" LOS PARAMETROS DE (ESPERAR) DEBEN SER TIPO ENTERO \n int tiempo, int canal"+linea+columna);
             return new Exeption("SEMANTICO"," LOS PARAMETROS DE (ESPERAR) DEBEN SER TIPO ENTERO \n int tiempo, int canal",linea,columna);
         }
         
