@@ -54,13 +54,13 @@ public class Funcion implements Instruccion,Serializable {
                 
                 if (in instanceof Continue) {
                     Continue cont = (Continue) in;
-
+                    AST.getERROR().add(new Exeption("SEMANTICO", "Continue en Funcion ", cont.getLinea(), cont.getColumna()));
                     return new Exeption("SEMANTICO", "Continue en Funcion ", cont.getLinea(), cont.getColumna());
                 }
                 if (in instanceof Salir) {
                     
                     Salir cont = (Salir) in;
-
+                     AST.getERROR().add(new Exeption("SEMANTICO", "Salir en Funcion ", cont.getLinea(), cont.getColumna()));
                     return new Exeption("SEMANTICO", "Salir en Funcion ", cont.getLinea(), cont.getColumna());
                 }
                 if (in instanceof Retorna) {
@@ -72,6 +72,7 @@ public class Funcion implements Instruccion,Serializable {
                 in.ejecutar(AST, ts);
                 if (in instanceof Exeption) {
                     Exeption ext = (Exeption) in;
+                     AST.getERROR().add(ext);
                     System.out.println("ERROR SEMANTICO ");;
                     System.out.println(ext.getDescripcion() + " linea" + ext.getLinea() + " columna " + ext.getColumna());
                     return ext;
@@ -85,6 +86,7 @@ public class Funcion implements Instruccion,Serializable {
         } catch (Exception e) {
             System.out.println(e);
             System.out.println("ERROR EN FUNCION");
+            AST.getERROR().add(new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal","",""));
             return new Exeption("SEMANTICO"," LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n String nota ,int octava, int tiempo, int canal","","");
         }
 

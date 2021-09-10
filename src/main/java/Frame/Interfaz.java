@@ -8,6 +8,7 @@ package Frame;
 import Archivos.GuardarArchivoBinario;
 import Archivos.LecturaArchivoBinario;
 import Error.Exeption;
+import Reproductor.Modificar;
 import Reproductor.NotasLeidas;
 import Reproductor.Pista;
 import Reproductor.Play;
@@ -715,6 +716,26 @@ public void guardarPista(Arbol ASTarbol, Pista p) {
         }
         }catch(Exception e){
             System.out.println("________ERROR EN METODO PLAY"+e);
+        }
+    }
+    public void modificar(){
+        try{
+        if(!ListaCanciones.isSelectionEmpty()){
+    
+        if(!ListaCanciones.getSelectedValue().isEmpty()){
+            
+        Modificar modif=new Modificar(ListaCanciones.getSelectedValue());
+        String codigo=modif.modificar();
+        AreaEditor.setText("");
+        AreaEditor.setText(codigo);
+            
+        }
+    
+        }else{
+            JOptionPane.showMessageDialog(null, "No has seleccionado ninguna pista para modificar");
+        }
+        }catch(Exception e){
+            System.out.println("________ERROR EN METODO MODIFICAR"+e);
         }
     }
 

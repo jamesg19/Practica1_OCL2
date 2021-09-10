@@ -5,7 +5,7 @@
  */
 package Reproductor;
 
-import Error.Exeption;
+
 import arbol.Operacion;
 import java.io.Serializable;
 

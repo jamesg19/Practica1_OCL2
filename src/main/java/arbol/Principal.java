@@ -37,22 +37,22 @@ public class Principal implements Instruccion,Serializable {
                 //System.out.println(in.ejecutar(tablaLocal).getClass().getSimpleName());
                 if(in instanceof Continue){
                     Continue cont=(Continue) in;
-                    
+                    AST.getERROR().add(new Exeption("SEMANTICO","Continue en Principal",cont.getLinea(),cont.getColumna()));
                     return new Exeption("SEMANTICO","Continue en Principal",cont.getLinea(),cont.getColumna());
                 }
                 if(in instanceof Salir){
                     Salir cont=(Salir) in;
-                    
+                     AST.getERROR().add(new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna()));
                     return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
                 }
                 if(in instanceof Exeption){
                     Exeption cont=(Exeption) in;
-                    
+                     AST.getERROR().add(new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna()));
                     return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
                 }
                 if(in instanceof Principal){
                     Principal cont=(Principal) in;
-                    
+                     AST.getERROR().add(new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna()));
                     return new Exeption("SEMANTICO","Salir en Principal",cont.getLinea(),cont.getColumna());
                 }
                 

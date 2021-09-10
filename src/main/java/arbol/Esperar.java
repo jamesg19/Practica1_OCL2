@@ -44,6 +44,7 @@ public class Esperar implements Instruccion,Serializable {
         return null;
         }
         catch(Exception e){
+            AST.getERROR().add(new Exeption("SEMANTICO"," LOS PARAMETROS DE (ESPERAR) DEBEN SER TIPO ENTERO \n int tiempo, int canal",linea,columna));
             System.out.println("SEMANTICO"+" LOS PARAMETROS DE (ESPERAR) DEBEN SER TIPO ENTERO \n int tiempo, int canal"+linea+columna);
             return new Exeption("SEMANTICO"," LOS PARAMETROS DE (ESPERAR) DEBEN SER TIPO ENTERO \n int tiempo, int canal",linea,columna);
         }

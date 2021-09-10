@@ -51,6 +51,7 @@ public class DeclaracionArreglo implements Instruccion,Serializable {
 
                 //buscar si existe la variable
                 if (ts.existeVariable(in.toString())) {
+                    AST.getERROR().add(new Exeption("SEMANTICO", " EL ID DE ARREGLO: " + in.toString() + " YA EXISTE", linea, columna));
                     return new Exeption("SEMANTICO", " EL ID DE ARREGLO: " + in.toString() + " YA EXISTE", linea, columna);
                 }
             }

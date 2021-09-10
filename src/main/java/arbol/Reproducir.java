@@ -41,6 +41,7 @@ public class Reproducir implements Instruccion,Serializable {
             if(octavaa>=0 && octavaa<=8){
                 
             }else{
+                AST.getERROR().add(new Exeption("SEMANTICO","RANGO FUERA DEL LIMITE EN OCTAVA(1-8) ",linea,columna));
                 return new Exeption("SEMANTICO","RANGO FUERA DEL LIMITE EN OCTAVA(1-8) ",linea,columna);
             }
             int tiempoo = Integer.parseInt(tiempo.ejecutar(AST, ts).toString());
@@ -55,6 +56,7 @@ public class Reproducir implements Instruccion,Serializable {
         } catch (Exception e) {
             System.out.println(e);
             System.out.println("LOS PARA,ETROS DE REPRODUCIR DEBEN SER DE TIPO ENTERO");
+            AST.getERROR().add(new Exeption("SEMANTICO", " LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n (String nota ,int octava, int tiempo, int canal)", linea, columna));
             return new Exeption("SEMANTICO", " LOS PARAMETROS DE REPRODUCIR DEBEN SER TIPO ENTERO \n (String nota ,int octava, int tiempo, int canal)", linea, columna);
         }
     }

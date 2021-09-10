@@ -63,6 +63,7 @@ public class SumaSimplificada implements Instruccion,Serializable {
         return tmp;
     }catch(Exception e){
             System.out.println("Semantico "+"la variable: "+id.toString()+" para suma simplificada no existe");
+            AST.getERROR().add(new Exeption("Semantico","la variable: "+id.toString()+" no existe","",""));
         return new Exeption("Semantico","la variable: "+id.toString()+" no existe","","");
     }
     }

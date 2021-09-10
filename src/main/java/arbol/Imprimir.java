@@ -36,6 +36,7 @@ public class Imprimir implements Instruccion,Serializable{
         System.out.println(contenido.ejecutar(AST,ts).toString());
         return null;
         } catch(Exception e){
+            
             return new Exeption("SEMANTICO","ERROR ","","");
         }
     }

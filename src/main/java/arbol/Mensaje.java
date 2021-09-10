@@ -40,6 +40,7 @@ public class Mensaje implements Instruccion,Serializable{
         //System.out.println(contenido.ejecutar(ts).toString());
         return null;
         } catch(Exception e){
+            AST.getERROR().add(new Exeption("SEMANTICO","ERROR AL EJECUTAR LA INSTRUCCION MENSAJE","",""));
             return new Exeption("SEMANTICO","ERROR AL EJECUTAR LA INSTRUCCION MENSAJE","","");
         }
     }

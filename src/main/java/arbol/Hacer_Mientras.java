@@ -39,7 +39,7 @@ public class Hacer_Mientras implements Instruccion,Serializable{
                 ins.ejecutar(AST,tablaLocal);
                 if(ins instanceof Exeption){
                     Exeption ext=(Exeption) ins;
-                    
+                    AST.getERROR().add(ext);
                     return ext;
                 }
             }

@@ -90,6 +90,7 @@ public class Llamada_Funcion implements Instruccion,Serializable {
                                 } else {
                                     coincide = false;
                                     System.out.println("NO COINCIDE");
+                                     AST.getERROR().add(new Exeption("SEMANTICO", "El tipo de parametro no coincide el admitido en la funcion" + nombre, fila, columna));
                                     return new Exeption("SEMANTICO", "El tipo de parametro no coincide el admitido en la funcion" + nombre, fila, columna);
                                 }
                             }
@@ -106,6 +107,7 @@ public class Llamada_Funcion implements Instruccion,Serializable {
                             try{
                             return f.getRetorna().ejecutar(AST, tablaLocal);
                             } catch(Exception e){
+                                AST.getERROR().add(new Exeption("SEMANTICO"," NO HAY INSTRUCCION RETURN DENTRO DE LA FUNCION:"+nombre,"",""));
                                 return new Exeption("SEMANTICO"," NO HAY INSTRUCCION RETURN DENTRO DE LA FUNCION:"+nombre,"","");
                             }
                         }
@@ -113,10 +115,12 @@ public class Llamada_Funcion implements Instruccion,Serializable {
                     }
 
                 } else {
-                    return new Exeption("", "", "", "");
+                    AST.getERROR().add(new Exeption("SEMANTICO", " LA CANTIDAD DE PARAMETROS NO ES LA CORRECTA", "", ""));
+                    return new Exeption("SEMANTICO", " LA CANTIDAD DE PARAMETROS NO ES LA CORRECTA", "", "");
                 }
 
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "LA FUNCION: " + nombre + " NO EXISTE", fila, columna));
                 return new Exeption("SEMANTICO", "LA FUNCION: " + nombre + " NO EXISTE", fila, columna);
 
             }

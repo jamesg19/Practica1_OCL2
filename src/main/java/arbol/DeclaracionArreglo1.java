@@ -51,25 +51,6 @@ public class DeclaracionArreglo1 implements Instruccion,Serializable {
         tipo = t;
         this.valor = b;
 
-        /*
-        byte[][] edad = new byte[4][3];
-
--        short ][] edad = new short[4][3];
-
--        int[][] edad = new int[4][3];
-
--        long[][] edad = new long[4][3];
-
--        float[][] estatura = new float[3][2];
-
--        double[][] estatura = new double[3][2];
-
--        boolean[][] estado = new boolean[5][4];
-
--        char[][] sexo = new char[2][1];
-
--        String[][] nombre = new String[2][1];
-         */
     }
 
     @Override
@@ -83,6 +64,7 @@ public class DeclaracionArreglo1 implements Instruccion,Serializable {
 
                 //buscar si existe la variable
                 if (ts.existeVariable(in.toString())) {
+                    AST.getERROR().add(new Exeption("SEMANTICO", " EL ID DE ARREGLO: " + in.toString() + " YA EXISTE", linea, columna));
                     return new Exeption("SEMANTICO", " EL ID DE ARREGLO: " + in.toString() + " YA EXISTE", linea, columna);
                 }
             }

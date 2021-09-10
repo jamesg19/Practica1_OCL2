@@ -214,6 +214,7 @@ public class Operacion implements Instruccion,Serializable {
                 return null;
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en / ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
         } 
@@ -305,6 +306,7 @@ public class Operacion implements Instruccion,Serializable {
 
             return null;
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en * ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
 
@@ -378,10 +380,13 @@ public class Operacion implements Instruccion,Serializable {
                 double b = Double.parseDouble(operadorDer.ejecutar(AST, ts).toString());
                 return a - b;
             } else {
-                //Exeption e= new Exeption("SEMANTICO","Tipo erroneo en RESTA","",""); 
+
+                
+                AST.getERROR().add(new Exeption("SEMANTICO", "Tipo erroneo en RESTA", "", ""));
                 return new Exeption("SEMANTICO", "Tipo erroneo en RESTA", "", "");
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en RESTA ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
         } ////////////////////////////////////////SUMA/////////////////////////////////////////
@@ -502,10 +507,13 @@ public class Operacion implements Instruccion,Serializable {
                 return a + b;
             } else {
                 //Exeption e= new Exeption("SEMANTICO","Tipo erroneo en RESTA","",""); 
+                AST.getERROR().add(new Exeption("SEMANTICO", "Tipo erroneo en SUMA", "", ""));
+                
                 return new Exeption("SEMANTICO", "Tipo erroneo en SUMA", "", "");
             }
             }catch(Exception e){
-                return new Exeption("SEMANTICO"," NULL POINTER ","","");
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en SUMA ","",""));
+                return new Exeption("SEMANTICO"," NULL POINTER EN SUMA ","","");
             }
              
         } ////////////////////////////////////MODULO////////////////////////////
@@ -536,6 +544,8 @@ public class Operacion implements Instruccion,Serializable {
             }
             return null;
             }catch(Exception e){
+
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en MODULO ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
         } ////////////////////////////////////POTENCIA////////////////////////////
@@ -560,6 +570,8 @@ public class Operacion implements Instruccion,Serializable {
 
             return null;
             }catch(Exception e){
+
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en POTENCIA ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
         } //////////////////////////////////////////AND///////////////////////////////
@@ -573,9 +585,12 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = flag1 && flag2;
                 return result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN AND", "", ""));
+               
                 return new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN AND", "", "");
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en AND ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
 
@@ -590,9 +605,11 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = flag1 || flag2;
                 return result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN OR", "", ""));
                 return new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN OR", "", "");
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en OR ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
 
@@ -607,9 +624,11 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = (flag1) || (flag2);
                 return !result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN NOR", "", ""));
                 return new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN NOR", "", "");
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en NOR ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
 
@@ -624,9 +643,11 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = (flag1 && !flag2) || (!flag1 && flag2);
                 return result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN XOR", "", ""));
                 return new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN XOR", "", "");
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en XOR ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
 
@@ -641,9 +662,11 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = (flag1) && (flag2);
                 return !result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN NAND", "", ""));
                 return new Exeption("SEMANTICO", "ERROR TIPO DE DATO NO BOOLEANO EN NAND", "", "");
             }
             }catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en NAND ","",""));
                 return new Exeption("SEMANTICO"," NULL POINTER ","","");
             }
 
@@ -653,7 +676,7 @@ public class Operacion implements Instruccion,Serializable {
         ///////////////////////////////////////MAYOR_QUE/////////////////////////////////////
         ///////////////////////////////////////MAYOR_QUE/////////////////////////////////////
         else if (tipo_operacion == Tipo_operacion.MAYOR_QUE) {
-
+            try{
             // ENTERO > ENTERO
             if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
                 double a = Double.parseDouble(operadorIzq.ejecutar(AST, ts).toString());
@@ -685,7 +708,12 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = a > b;
                 return result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "TIPO ERRONEO PARA MAYOR QUE", "", ""));
                 return new Exeption("SEMANTICO", "TIPO ERRONEO PARA MAYOR QUE", "", "");
+            }
+            } catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en MAYOR QUE ","",""));
+                return new Exeption("SEMANTICO"," NULL POINTER en MAYOR QUE ","","");
             }
 
         } ///////////////////////////////////////MENOR QUE/////////////////////////////////////
@@ -693,7 +721,7 @@ public class Operacion implements Instruccion,Serializable {
         ///////////////////////////////////////MENOR QUE/////////////////////////////////////
         else if (tipo_operacion == Tipo_operacion.MENOR_QUE) {
             // ENTERO < ENTERO
-
+            try{
             if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
 
                 int a = Integer.parseInt(operadorIzq.ejecutar(AST, ts).toString());
@@ -727,13 +755,17 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = a < b;
                 return (Boolean) result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "TIPO ERRONEO PARA MENOR QUE", "", ""));
                 return new Exeption("SEMANTICO", "TIPO ERRONEO PARA MENOR QUE", "", "");
             }
-
+            } catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en MENOR QUE ","",""));
+            }
         } ////////////////////////////////////////////MAYOR_IGUAL///////////////////////////////////
         ////////////////////////////////////////////MAYOR_IGUAL///////////////////////////////////
         ////////////////////////////////////////////MAYOR_IGUAL///////////////////////////////////
         else if (tipo_operacion == Tipo_operacion.MAYOR_IGUAL) {
+            try{
             // ENTERO >= ENTERO
             if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
                 double a = Double.parseDouble(operadorIzq.ejecutar(AST, ts).toString());
@@ -765,13 +797,18 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = a >= b;
                 return result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "TIPO ERRONEO PARA MAYOR IGUAL", "", ""));
                 return new Exeption("SEMANTICO", "TIPO ERRONEO PARA MAYOR IGUAL", "", "");
             }
-
+            } catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en MAYOR IGUAL  ","",""));
+                return new Exeption("SEMANTICO"," NULL POINTER en MAYOR IGUAL  ","","");
+            }
         } ////////////////////////////////////////////MENOR_IGUAL///////////////////////////////////
         ////////////////////////////////////////////MENOR_IGUAL///////////////////////////////////
         ////////////////////////////////////////////MENOR_IGUAL///////////////////////////////////
         else if (tipo_operacion == Tipo_operacion.MENOR_IGUAL) {
+            try{
             // ENTERO <= ENTERO
             if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
                 double a = Double.parseDouble(operadorIzq.ejecutar(AST, ts).toString());
@@ -803,13 +840,18 @@ public class Operacion implements Instruccion,Serializable {
                 boolean result = a <= b;
                 return result;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "TIPO ERRONEO PARA MENOR IGUAL", "", ""));
                 return new Exeption("SEMANTICO", "TIPO ERRONEO PARA MENOR IGUAL", "", "");
             }
-
+                } catch(Exception e){
+                    AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en MENOR IGUAL  ","",""));
+                    return new Exeption("SEMANTICO"," NULL POINTER en MENOR IGUAL  ","","");
+            }
         } ////////////////////////////////////////////IGUALACION///////////////////////////////////
         ////////////////////////////////////////////IGUALACION///////////////////////////////////
         ////////////////////////////////////////////IGUALACION///////////////////////////////////
         else if (tipo_operacion == Tipo_operacion.IGUALACION) {
+            try{
             //ENTERO
             // ENTERO == ENTERO
             if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
@@ -938,7 +980,12 @@ public class Operacion implements Instruccion,Serializable {
                 boolean flag = (a == b);
                 return flag;
             } else {
+                AST.getERROR().add(new Exeption("SEMANTICO", "TIPO DE DATO ERRONEO EN IGUALACION CHAR", "", ""));
                 return new Exeption("SEMANTICO", "TIPO DE DATO ERRONEO EN IGUALACION CHAR", "", "");
+            }
+            } catch(Exception e){
+                    AST.getERROR().add(new Exeption("SEMANTICO"," NULL POINTER en IGUALACION CHAR  ","",""));
+                    return new Exeption("SEMANTICO"," NULL POINTER en IGUALACION CHAR  ","","");
             }
 
         } ////////////////////////////////////////////DIFERENCIACION/////////////////////////////////////////
@@ -946,6 +993,7 @@ public class Operacion implements Instruccion,Serializable {
         ////////////////////////////////////////////DIFERENCIACION/////////////////////////////////////////
         else if (tipo_operacion == Tipo_operacion.DIFERENCIACION) {
             //ENTERO
+            try{
             // ENTERO != ENTERO
             if (((Object) operadorIzq.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer") && ((Object) operadorDer.ejecutar(AST, ts)).getClass().getSimpleName().toString().equals("Integer")) {
 
@@ -1073,7 +1121,12 @@ public class Operacion implements Instruccion,Serializable {
                 boolean flag = (a == b);
                 return flag;
             } else {
-                return new Exeption("SEMANTICO", "TIPO DE DATO ERRONEO EN IGUALACION CHAR", "", "");
+                AST.getERROR().add(new Exeption("SEMANTICO", "TIPO DE DATO ERRONEO EN DIFERENCIACION ", "", ""));
+                return new Exeption("SEMANTICO", "TIPO DE DATO ERRONEO EN DIFERENCIACION ", "", "");
+            }
+            } catch(Exception e){
+                AST.getERROR().add(new Exeption("SEMANTICO", "NULL POINTER EN DIFERENCIACION CHAR", "", ""));
+                return new Exeption("SEMANTICO", "NULL POINTER EN DIFERENCIACION CHAR", "", "");
             }
 
         } 
@@ -1098,11 +1151,13 @@ public class Operacion implements Instruccion,Serializable {
                     boolean flag = (Boolean) operadorIzq.ejecutar(AST, ts);
                     return !flag;
                 } else {
+                    AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO EN NEGACION BOOLEANA", "", ""));
                     return new Exeption("SEMANTICO", "ERROR TIPO DE DATO EN NEGACION BOOLEANA", "", "");
                 }
             } catch (Exception e) {
 
             }
+            AST.getERROR().add(new Exeption("SEMANTICO", "ERROR TIPO DE DATO EN NEGACION BOOLEANA", "", ""));
             return new Exeption("SEMANTICO", "ERROR TIPO DE DATO EN NEGACION BOOLEANA", "", "");
         } /* ======== OPERACIONES UNARIOS ======== */ /* ======== OPERACIONES UNARIOS ======== */ /* ======== OPERACIONES UNARIOS ======== */ /* ======== OPERACIONES UNARIOS ======== */ /* ======== OPERACIONES UNARIOS ======== */ else if (tipo_operacion == Tipo_operacion.NUMERO) {
             return new Integer(valor.toString());
@@ -1127,7 +1182,7 @@ public class Operacion implements Instruccion,Serializable {
                 
                 return ts.getValor(valor.toString());
             } catch (Exception e) {
-                
+                AST.getERROR().add(new Exeption("SEMANTICO", "LA VARIABLE ES NULA+", "", ""));
                 return new Exeption("SEMANTICO", "LA VARIABLE ES NULA+", "", "");
             }
         } 
@@ -1165,18 +1220,10 @@ public class Operacion implements Instruccion,Serializable {
 
                 return null;
             }
-        }
-        
-        
-        
-        
-        
-        
-        
-        else {
+        }else {
             return null;
         }
-
+        return null;
     }
 
     /**

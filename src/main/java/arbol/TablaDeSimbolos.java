@@ -27,6 +27,7 @@ public class TablaDeSimbolos extends LinkedList<Simbolo> implements Serializable
                 return s.getValor();
                 }catch(Exception e){
                     System.out.println("LA VARIABLE "+id+" ES NULAA........................ ");
+                    
                     return new Exeption("SEMANTICO"," la variable "+id+" es Nula","","");
                 }
                 //return s.getValor();
